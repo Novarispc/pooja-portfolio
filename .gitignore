@@ -6,3 +6,5 @@ data/history/*.json
 public/uploads/*
 !public/uploads/.gitkeep
 npm-debug.log*
+
+.vercel

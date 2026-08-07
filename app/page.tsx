@@ -66,24 +66,45 @@ export default async function HomePage() {
 
       {/* ABOUT */}
       <section id="about" className="py-24 px-8" style={{ background: "var(--bg-card)" }}>
-        <div className="max-w-4xl mx-auto">
+        <div className="max-w-5xl mx-auto">
           <span className="eyebrow mb-4 block">About</span>
-          <h2 className="font-display italic text-4xl mb-6" style={{ color: "var(--text-head)" }}>
-            {c.about.title.split("\n").map((l, i) => (
-              <span key={i}>
-                {l}
-                <br />
-              </span>
-            ))}
-          </h2>
-          <blockquote className="font-display italic text-xl border-l-2 pl-6 mb-8" style={{ borderColor: "var(--clay)", color: "var(--sage)" }}>
-            &ldquo;{c.about.quote}&rdquo;
-          </blockquote>
-          {c.about.paragraphs.map((p, i) => (
-            <p key={i} className="mb-4" style={{ color: "var(--text-body)" }}>
-              {p}
-            </p>
-          ))}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
+            {/* Profile Picture */}
+            {c.avatarUrl && (
+              <div className="md:col-span-1">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={c.avatarUrl}
+                  alt="Pooja Raviendran Kutty"
+                  className="w-full max-w-xs rounded-lg shadow-lg"
+                  style={{
+                    border: "1px solid var(--border)",
+                    aspectRatio: "3/4",
+                    objectFit: "cover",
+                  }}
+                />
+              </div>
+            )}
+            {/* Text Content */}
+            <div className={c.avatarUrl ? "md:col-span-2" : ""}>
+              <h2 className="font-display italic text-4xl mb-6" style={{ color: "var(--text-head)" }}>
+                {c.about.title.split("\n").map((l, i) => (
+                  <span key={i}>
+                    {l}
+                    <br />
+                  </span>
+                ))}
+              </h2>
+              <blockquote className="font-display italic text-xl border-l-2 pl-6 mb-8" style={{ borderColor: "var(--clay)", color: "var(--sage)" }}>
+                &ldquo;{c.about.quote}&rdquo;
+              </blockquote>
+              {c.about.paragraphs.map((p, i) => (
+                <p key={i} className="mb-4" style={{ color: "var(--text-body)" }}>
+                  {p}
+                </p>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
