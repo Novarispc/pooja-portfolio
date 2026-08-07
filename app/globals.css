@@ -1,0 +1,253 @@
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #f5f1e9;
+  --bg-card: #eae5da;
+  --text-head: #253224;
+  --text-body: #2f342d;
+  --text-mute: #7a7d74;
+  --sage: #4a5e48;
+  --sage-mid: #6b8268;
+  --sage-pale: #dde8da;
+  --clay: #be8d65;
+  --border: rgba(107, 130, 104, 0.18);
+  --nav-surface: #3d5039;
+  --nav-text: #ede8df;
+  --nav-mute: #c8c3ba;
+}
+
+/* Dark — follows OS preference unless overridden by the explicit toggle below */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1a1917;
+    --bg-card: #222120;
+    --text-head: #ede8df;
+    --text-body: #c0bbb2;
+    --text-mute: #726e66;
+    --sage: #7ea87b;
+    --sage-mid: #9bbb97;
+    --sage-pale: #1e241c;
+    --clay: #c8956c;
+    --border: rgba(145, 168, 138, 0.15);
+    --nav-surface: #2c4128;
+    --nav-text: #ede8df;
+    --nav-mute: #c8c3ba;
+  }
+}
+
+/* Explicit toggle — always wins over the media query, in both directions */
+:root[data-theme="dark"] {
+  --bg: #1a1917;
+  --bg-card: #222120;
+  --text-head: #ede8df;
+  --text-body: #c0bbb2;
+  --text-mute: #726e66;
+  --sage: #7ea87b;
+  --sage-mid: #9bbb97;
+  --sage-pale: #1e241c;
+  --clay: #c8956c;
+  --border: rgba(145, 168, 138, 0.15);
+  --nav-surface: #2c4128;
+  --nav-text: #ede8df;
+  --nav-mute: #c8c3ba;
+}
+:root[data-theme="light"] {
+  --bg: #f5f1e9;
+  --bg-card: #eae5da;
+  --text-head: #253224;
+  --text-body: #2f342d;
+  --text-mute: #7a7d74;
+  --sage: #4a5e48;
+  --sage-mid: #6b8268;
+  --sage-pale: #dde8da;
+  --clay: #be8d65;
+  --border: rgba(107, 130, 104, 0.18);
+  --nav-surface: #3d5039;
+  --nav-text: #ede8df;
+  --nav-mute: #c8c3ba;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text-body);
+  font-family: "DM Sans", system-ui, sans-serif;
+  line-height: 1.65;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.font-display {
+  font-family: "Cormorant Garamond", Georgia, serif;
+}
+
+.font-mono {
+  font-family: "DM Mono", ui-monospace, monospace;
+}
+
+.eyebrow {
+  font-family: "DM Mono", monospace;
+  font-size: 0.66rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--clay);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+}
+.eyebrow::before {
+  content: "";
+  width: 26px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0.85;
+}
+
+/* Cards always sit on --bg-card so they read against either page background;
+   sections that are themselves --bg-card (Projects) override back to --bg. */
+.card {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(37, 50, 36, 0.05);
+  transition: transform 0.3s cubic-bezier(0.22, 0.61, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 0.61, 0.36, 1),
+    border-color 0.3s ease, background 0.3s ease;
+}
+.card:hover {
+  transform: translateY(-6px);
+  border-color: var(--sage);
+  background: var(--sage-pale);
+  box-shadow: 0 18px 40px rgba(37, 50, 36, 0.14), 0 4px 14px rgba(74, 94, 72, 0.12);
+}
+
+/* Portfolio cards get their own clay accent so they read distinctly from Projects (sage-topped) */
+.card-portfolio {
+  border-top: 3px solid var(--clay);
+}
+.card-portfolio:hover {
+  border-color: var(--clay);
+  background: color-mix(in srgb, var(--clay) 8%, var(--bg-card));
+}
+
+/* Projects section sits on --bg-card, so its cards flip back to --bg for contrast */
+.card-projects {
+  background: var(--bg);
+  border-top: 3px solid var(--sage);
+}
+.card-projects:hover {
+  background: var(--sage-pale);
+  border-color: var(--sage);
+}
+
+/* Milestone cards get a sage-mid left accent */
+.card-milestone {
+  border-left: 3px solid var(--sage-mid);
+}
+.card-milestone:hover {
+  border-color: var(--sage-mid);
+}
+
+/* Contact links */
+.contact-link {
+  position: relative;
+  display: inline-block;
+  transition: color 0.25s ease;
+}
+.contact-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+}
+.contact-link:hover {
+  color: var(--clay) !important;
+}
+.contact-link:hover::after {
+  transform: scaleX(1);
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.85rem 2rem;
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+.btn-primary {
+  background: var(--sage);
+  color: var(--bg);
+  border: 1.5px solid var(--sage);
+}
+.btn-primary:hover {
+  background: var(--clay);
+  border-color: var(--clay);
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(190, 141, 101, 0.35);
+}
+.btn-outline {
+  background: transparent;
+  border: 1.5px solid var(--border);
+  color: var(--text-head);
+}
+.btn-outline:hover {
+  border-color: var(--sage);
+  background: var(--sage-pale);
+  color: var(--sage);
+  transform: translateY(-3px);
+}
+
+/* File chips (Portfolio downloads) */
+.file-pill {
+  border: 1.5px solid var(--border);
+  background: transparent;
+  color: var(--sage);
+  border-radius: 4px;
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+}
+.file-pill:hover {
+  background: var(--sage);
+  border-color: var(--sage);
+  color: var(--bg);
+  transform: translateY(-2px);
+}
+
+/* Tool proficiency pills — section sits on --bg-card, so pills use --bg for contrast */
+.tool-pill {
+  border: 1.5px solid var(--border);
+  background: var(--bg);
+  color: var(--text-body);
+  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+}
+.tool-pill:hover {
+  background: var(--clay);
+  border-color: var(--clay);
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* Project tag badge */
+.tag-badge {
+  transition: background 0.25s ease, color 0.25s ease;
+}

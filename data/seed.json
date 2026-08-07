@@ -1,0 +1,69 @@
+{
+  "hero": {
+    "coord": "52.2053° N, 0.1218° E · Cambridge, UK",
+    "name": "Pooja\nRaviendran\nKutty",
+    "role": "Landscape Architect",
+    "tagline": "Landscape Planning · LVIA · Nature-Led Design",
+    "intro": "A landscape architect with UK consultancy experience across residential, commercial, renewable energy, infrastructure, and mixed-use developments — combining technical rigour with design thinking always rooted in the land."
+  },
+  "about": {
+    "title": "Shaping landscapes\nthat endure",
+    "quote": "I bring together technical landscape planning and creative design thinking to shape places that endure.",
+    "paragraphs": [
+      "A landscape architect working at the intersection of site-specific analysis and nature-led design. Currently based in Cambridge, I work with Pegasus Group on landscape planning, LVIA, and masterplanning across residential, commercial, and infrastructure typologies.",
+      "My practice spans baseline landscape and visual assessments, landscape character assessments, and full LVIAs — translating technical evidence into planning narratives that hold up at committee. I prepare landscape masterplans, planting proposals, and ecology management plans with equal care for ecological integrity and visual quality.",
+      "Having trained and practised across the UK, China, and India, I bring a multi-cultural lens to each project, always grounded in the specific character, ecology, and community of the site in front of me."
+    ]
+  },
+  "expertise": [
+    { "title": "Landscape Planning", "desc": "Policy-led assessments supporting planning applications across development typologies." },
+    { "title": "LVIA Support", "desc": "Visual impact assessments, viewpoint photography, and significance evaluation for EIA." },
+    { "title": "Landscape Masterplanning", "desc": "Strategic frameworks structuring green infrastructure, open space, and place-making." },
+    { "title": "Planting Design", "desc": "Species-rich, ecologically sensitive planting schemes from garden to strategic scale." },
+    { "title": "Site Analysis & Feasibility", "desc": "Desk-based and field surveys defining landscape character, constraints, and opportunities." },
+    { "title": "Green Belt Assessments", "desc": "Harm and contribution assessments supporting Green Belt development proposals." },
+    { "title": "Landscape Management Plans", "desc": "LEMPs, LEAPs, and habitat management strategies for post-consent delivery." },
+    { "title": "Urban Design", "desc": "Streetscape, public realm, and mixed-use with a strong place-making agenda." },
+    { "title": "Environmental Planning", "desc": "Landscape input to Environmental Statements and NSIP-scale documentation." },
+    { "title": "Planning Documentation", "desc": "Landscape statements, design & access statements, and expert planning narrative." }
+  ],
+  "projects": [
+    { "name": "Cambridge Road, Sawbridgeworth", "tag": "LEMP & LEAP", "loc": "Sawbridgeworth, Hertfordshire", "role": "Landscape Proposal", "desc": "Prepared a Landscape and Ecology Management Plan and LEAP, establishing long-term habitat management objectives and biodiversity commitments for a residential site." },
+    { "name": "Chesterfield Road, Calow", "tag": "Landscape Masterplan", "loc": "Calow, Derbyshire", "role": "Masterplan Design", "desc": "Landscape masterplan integrating green corridors, structured planting, and quality public open space into the wider development framework." },
+    { "name": "Manor Caravan Park", "tag": "Landscape Masterplan", "loc": "United Kingdom", "role": "Masterplan Design", "desc": "Masterplan providing landscape strategy, boundary planting, and site layout enhancements to improve visual setting and ecological connectivity." },
+    { "name": "Wolsey Grange Phase 2", "tag": "Strategic Masterplan", "loc": "United Kingdom", "role": "Strategic Landscape Masterplan", "desc": "Strategic landscape masterplan for a significant residential phase, including structural planting, green infrastructure delivery, and phasing strategy." },
+    { "name": "Evolution Business Park, Impington", "tag": "LVIA", "loc": "Impington, Cambridgeshire", "role": "LVIA Contribution", "desc": "Contributed to the Landscape and Visual Impact Assessment for a commercial expansion, including baseline analysis, viewpoint survey, and significance appraisal." },
+    { "name": "Oakley Solar Farm", "tag": "Renewable Energy", "loc": "Oakley, United Kingdom", "role": "Detailed Landscape Scheme", "desc": "Detailed landscape scheme for a utility-scale solar farm, encompassing perimeter planting, grassland management, and visual mitigation." },
+    { "name": "University of Hull", "tag": "Public Art & Landscape", "loc": "Hull, East Yorkshire", "role": "Public Art Design", "desc": "Design contribution to a public art installation within the campus landscape, coordinating artistic intent with setting, context, and pedestrian movement." },
+    { "name": "Birkenshaw Fire Services HQ", "tag": "Infrastructure", "loc": "Birkenshaw, West Yorkshire", "role": "Site Landscape Support", "desc": "Landscape support for a new headquarters building: external works design, hard and soft landscape proposals, and coordination with the project team." }
+  ],
+  "experience": [
+    { "date": "March 2025 — Present", "role": "Landscape Architect", "company": "Pegasus Group Ltd · Cambridge, UK", "desc": "Working within the landscape planning team on a varied caseload of residential, commercial, and renewable energy projects. Responsibilities include LVIA preparation, landscape masterplanning, planting design, and planning condition discharge." },
+    { "date": "October 2023 — March 2025", "role": "Graduate Landscape Architect", "company": "Bond Bryan Architects Ltd · Birmingham, UK", "desc": "Contributed to public and cultural sector projects alongside an architecture-led team, developing skills in landscape and external works design, public realm proposals, and coordination with universities, public bodies, and infrastructure clients." },
+    { "date": "January 2019 — October 2021", "role": "Assistant Architect", "company": "Studio ScapeArt Interior and Design · Chennai, India", "desc": "Architectural and design support across residential and commercial interior projects, building foundational experience in technical drawing, client communication, and studio-based design delivery." },
+    { "date": "February 2017 — December 2018", "role": "Intern", "company": "Ningbo Architectural Design & Research Institute · Ningbo, China", "desc": "Internship within a large-scale architectural practice during undergraduate study, contributing to design projects and developing technical drawing and project coordination skills." }
+  ],
+  "education": [
+    { "flag": "🇬🇧", "deg": "MLA", "sub": "Master of Landscape Architecture", "inst": "Newcastle University", "meta": "Newcastle upon Tyne, UK · 2023" },
+    { "flag": "🇨🇳", "deg": "BArch", "sub": "Bachelor of Architecture", "inst": "Ningbo University", "meta": "Ningbo, China · 2019" }
+  ],
+  "tools": [
+    { "label": "CAD & Vector", "pills": ["Vectorworks", "AutoCAD"] },
+    { "label": "Adobe Creative Suite", "pills": ["Photoshop", "InDesign", "Illustrator"] },
+    { "label": "3D & BIM", "pills": ["SketchUp", "Revit", "ArchiCAD"] },
+    { "label": "Productivity", "pills": ["MS Office Suite"] }
+  ],
+  "contact": {
+    "title": "Let's work together",
+    "intro": "Whether you have a landscape planning project in mind, a design commission, or simply want to discuss landscape architecture — I'd be glad to hear from you.",
+    "email": "pkutty66@gmail.com",
+    "linkedinUrl": "https://www.linkedin.com/in/pooja-raviendran-kutty-88010b158/",
+    "linkedinName": "Pooja Raviendran Kutty",
+    "location": "Cambridge, United Kingdom"
+  },
+  "footer": { "copyright": "© 2026 Pooja Raviendran Kutty · Cambridge, UK" },
+  "milestones": [],
+  "portfolioProjects": [],
+  "avatarUrl": null,
+  "meta": { "updatedAt": "2026-01-01T00:00:00.000Z", "status": "published" }
+}
