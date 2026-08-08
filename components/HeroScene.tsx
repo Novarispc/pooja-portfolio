@@ -1,16 +1,10 @@
 /**
- * Hero backdrop — three quiet contour rings around the coordinate marker
- * (echoes the "52.2053° N, 0.1218° E" eyebrow above the headline). One
- * subtle, slow breathing fade is the only motion — no draw-in sequence,
- * no rotation, no pulsing pings. Pure CSS, no JS.
+ * Hero backdrop — a single elevation horizon line drifting gently side to
+ * side, with the coordinate marker held static above it (echoes the
+ * "52.2053° N, 0.1218° E" eyebrow above the headline). One element, one
+ * transform, one animation — as simple as this gets. Pure CSS, no JS.
  */
 export default function HeroScene({ className = "" }: { className?: string }) {
-  const rings = [
-    { d: "M925,180 L901,206 L860,226 L817,208 L792,180 L818,153 L860,135 L904,152 Z", opacity: 0.3 },
-    { d: "M1055,180 L982,252 L860,307 L731,256 L655,180 L735,107 L860,56 L992,103 Z", opacity: 0.2 },
-    { d: "M1230,180 L1091,280 L860,356 L616,286 L472,180 L624,78 L860,7 L1110,72 Z", opacity: 0.12 },
-  ];
-
   return (
     <svg
       className={`hero-contour ${className}`}
@@ -19,10 +13,21 @@ export default function HeroScene({ className = "" }: { className?: string }) {
       aria-hidden="true"
       focusable="false"
     >
-      <g className="hero-scene-rings">
-        {rings.map((r, i) => (
-          <path key={i} d={r.d} fill="none" stroke="var(--sage-mid)" strokeWidth="1" style={{ opacity: r.opacity }} />
-        ))}
+      <g className="hero-scene-lines">
+        <path
+          d="M-60,215 C160,160 320,255 520,200 C700,150 830,235 1000,185 C1150,150 1280,215 1460,175"
+          fill="none"
+          stroke="var(--sage-mid)"
+          strokeWidth="1"
+          opacity="0.3"
+        />
+        <path
+          d="M-60,275 C170,230 330,305 530,265 C710,225 840,290 1010,250 C1160,220 1290,270 1460,240"
+          fill="none"
+          stroke="var(--sage-mid)"
+          strokeWidth="1"
+          opacity="0.16"
+        />
       </g>
 
       <g className="hero-scene-pin">

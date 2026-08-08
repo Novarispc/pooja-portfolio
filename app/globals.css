@@ -403,9 +403,9 @@ section[id] {
 }
 
 /* Hero backdrop ---------------------------------------------------------
-   Three quiet contour rings around the coordinate marker (echoes the
-   "52.2053° N, 0.1218° E" eyebrow above the headline). One subtle, slow
-   breathing fade is the only motion — deliberately restrained. */
+   A single elevation horizon (two layered lines) drifting gently side to
+   side — one element, one transform, one animation. The coordinate
+   marker stays static as an anchor point. */
 .hero-contour {
   position: absolute;
   inset: 0;
@@ -415,20 +415,20 @@ section[id] {
   mask-image: radial-gradient(ellipse 78% 82% at 62% 42%, #000 40%, transparent 86%);
 }
 
-.hero-scene-rings {
-  animation: rings-breathe 10s var(--ease) infinite;
+.hero-scene-lines {
+  animation: horizon-drift 18s var(--ease) infinite alternate;
 }
-@keyframes rings-breathe {
-  0%, 100% {
-    opacity: 1;
+@keyframes horizon-drift {
+  from {
+    transform: translateX(-16px);
   }
-  50% {
-    opacity: 0.72;
+  to {
+    transform: translateX(16px);
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-scene-rings {
+  .hero-scene-lines {
     animation: none;
   }
 }
