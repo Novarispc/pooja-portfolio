@@ -1,7 +1,7 @@
 import { readContent } from "@/lib/content";
 import Nav from "@/components/Nav";
 import Reveal from "@/components/Reveal";
-import ContourLines from "@/components/ContourLines";
+import HeroScene from "@/components/HeroScene";
 
 export const dynamic = "force-dynamic";
 
@@ -14,7 +14,7 @@ export default async function HomePage() {
 
       {/* HERO */}
       <section id="hero" className="relative pt-36 sm:pt-44 pb-24 sm:pb-28 px-6 sm:px-8 overflow-hidden">
-        <ContourLines className="hero-contour" />
+        <HeroScene />
         <div className="relative max-w-6xl mx-auto">
           <span className="eyebrow mb-5 block">{c.hero.coord}</span>
           <h1 className="font-display italic h-hero mb-7" style={{ color: "var(--text-head)" }}>
