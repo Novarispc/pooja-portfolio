@@ -10,6 +10,7 @@
     "hash-password": "node scripts/hash-password.js"
   },
   "dependencies": {
+    "@supabase/supabase-js": "^2.112.2",
     "bcryptjs": "^3.0.3",
     "jose": "^6.2.3",
     "next": "^15.5.18",
