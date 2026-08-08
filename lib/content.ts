@@ -12,8 +12,10 @@ export type SiteContent = {
     role: string;
     tagline: string;
     intro: string;
-    colorPrimary?: string;
-    colorSecondary?: string;
+    colorPrimaryLight?: string;
+    colorSecondaryLight?: string;
+    colorPrimaryDark?: string;
+    colorSecondaryDark?: string;
   };
   about: { title: string; quote: string; paragraphs: string[] };
   expertise: { title: string; desc: string }[];
@@ -28,8 +30,10 @@ export type SiteContent = {
     linkedinUrl: string;
     linkedinName: string;
     location: string;
-    colorPrimary?: string;
-    colorSecondary?: string;
+    colorPrimaryLight?: string;
+    colorSecondaryLight?: string;
+    colorPrimaryDark?: string;
+    colorSecondaryDark?: string;
   };
   footer: { copyright: string };
   milestones: { title: string; date: string; desc: string; img: string | null }[];

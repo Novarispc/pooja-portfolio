@@ -8,23 +8,34 @@ export const dynamic = "force-dynamic";
 export default async function HomePage() {
   const c = await readContent();
 
-  // Hero and Contact each get an optional admin-configurable primary/secondary
-  // gradient. Falls back to the standard theme background when unset.
-  const heroBg =
-    c.hero.colorPrimary && c.hero.colorSecondary
-      ? { background: `linear-gradient(135deg, ${c.hero.colorPrimary}, ${c.hero.colorSecondary})` }
-      : undefined;
-  const contactBg =
-    c.contact.colorPrimary && c.contact.colorSecondary
-      ? { background: `linear-gradient(135deg, ${c.contact.colorPrimary}, ${c.contact.colorSecondary})` }
-      : { background: "var(--bg-card)" };
+  // Hero and Contact each get independent, per-theme primary/secondary
+  // gradient colors, configurable in the admin dashboard. These are passed
+  // down as raw CSS custom properties only — the actual `background` rule
+  // (and which pair applies for the active theme) lives in globals.css
+  // (#hero / #contact, gated by [data-theme]), since the light/dark choice
+  // is a client-side toggle this server component can't know at render
+  // time. A color left unset here simply omits that custom property, so
+  // the CSS var() fallback (the section's normal background) takes over —
+  // per-theme, independently.
+  const heroColorVars = {
+    "--hero-primary-light": c.hero.colorPrimaryLight || undefined,
+    "--hero-secondary-light": c.hero.colorSecondaryLight || undefined,
+    "--hero-primary-dark": c.hero.colorPrimaryDark || undefined,
+    "--hero-secondary-dark": c.hero.colorSecondaryDark || undefined,
+  } as React.CSSProperties;
+  const contactColorVars = {
+    "--contact-primary-light": c.contact.colorPrimaryLight || undefined,
+    "--contact-secondary-light": c.contact.colorSecondaryLight || undefined,
+    "--contact-primary-dark": c.contact.colorPrimaryDark || undefined,
+    "--contact-secondary-dark": c.contact.colorSecondaryDark || undefined,
+  } as React.CSSProperties;
 
   return (
     <main>
       <Nav avatarUrl={c.avatarUrl} textColor={c.headerTextColor} />
 
       {/* HERO */}
-      <section id="hero" className="relative pt-36 sm:pt-44 pb-24 sm:pb-28 px-6 sm:px-8 overflow-hidden" style={heroBg}>
+      <section id="hero" className="relative pt-36 sm:pt-44 pb-24 sm:pb-28 px-6 sm:px-8 overflow-hidden" style={heroColorVars}>
         <HeroScene />
         <div className="relative max-w-6xl mx-auto">
           <span className="eyebrow mb-5 block">{c.hero.coord}</span>
@@ -353,7 +364,7 @@ export default async function HomePage() {
       </Reveal>
 
       {/* CONTACT */}
-      <Reveal as="section" id="contact" className="section relative px-6 sm:px-8" style={contactBg}>
+      <Reveal as="section" id="contact" className="section relative px-6 sm:px-8" style={contactColorVars}>
         <span className="section-edge" />
         <div className="max-w-4xl mx-auto">
           <span className="eyebrow mb-5 block">Contact</span>

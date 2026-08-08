@@ -154,10 +154,16 @@ export default function DashboardPage() {
           <Field label="Tagline" value={content.hero.tagline} onChange={(v) => set({ hero: { ...content.hero, tagline: v } })} />
           <TextArea label="Intro paragraph" value={content.hero.intro} rows={4} onChange={(v) => set({ hero: { ...content.hero, intro: v } })} />
           <ColorPairField
-            label="Background colors"
-            primary={content.hero.colorPrimary || ""}
-            secondary={content.hero.colorSecondary || ""}
-            onChange={(p, s) => set({ hero: { ...content.hero, colorPrimary: p, colorSecondary: s } })}
+            label="Background colors — light theme"
+            primary={content.hero.colorPrimaryLight || ""}
+            secondary={content.hero.colorSecondaryLight || ""}
+            onChange={(p, s) => set({ hero: { ...content.hero, colorPrimaryLight: p, colorSecondaryLight: s } })}
+          />
+          <ColorPairField
+            label="Background colors — dark theme"
+            primary={content.hero.colorPrimaryDark || ""}
+            secondary={content.hero.colorSecondaryDark || ""}
+            onChange={(p, s) => set({ hero: { ...content.hero, colorPrimaryDark: p, colorSecondaryDark: s } })}
           />
         </Section>
 
@@ -336,10 +342,16 @@ export default function DashboardPage() {
           <Field label="LinkedIn display name" value={content.contact.linkedinName} onChange={(v) => set({ contact: { ...content.contact, linkedinName: v } })} />
           <Field label="Location" value={content.contact.location} onChange={(v) => set({ contact: { ...content.contact, location: v } })} />
           <ColorPairField
-            label="Background colors"
-            primary={content.contact.colorPrimary || ""}
-            secondary={content.contact.colorSecondary || ""}
-            onChange={(p, s) => set({ contact: { ...content.contact, colorPrimary: p, colorSecondary: s } })}
+            label="Background colors — light theme"
+            primary={content.contact.colorPrimaryLight || ""}
+            secondary={content.contact.colorSecondaryLight || ""}
+            onChange={(p, s) => set({ contact: { ...content.contact, colorPrimaryLight: p, colorSecondaryLight: s } })}
+          />
+          <ColorPairField
+            label="Background colors — dark theme"
+            primary={content.contact.colorPrimaryDark || ""}
+            secondary={content.contact.colorSecondaryDark || ""}
+            onChange={(p, s) => set({ contact: { ...content.contact, colorPrimaryDark: p, colorSecondaryDark: s } })}
           />
           <Field label="Footer copyright" value={content.footer.copyright} onChange={(v) => set({ footer: { copyright: v } })} />
         </Section>

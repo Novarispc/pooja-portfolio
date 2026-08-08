@@ -100,6 +100,58 @@
   --shadow-tint: 35, 47, 34;
 }
 
+/* Hero & Contact background gradients ---------------------------------
+   Independently configurable per theme (light/dark) and per section, set
+   from the admin dashboard. page.tsx passes down only raw color custom
+   properties (--hero-primary-light etc.) — never a finished `background`
+   value — because only CSS, not the server component, knows which theme
+   is active. A color left unset by the admin simply falls through the
+   var() default to the section's normal background, so a gradient only
+   actually appears once both stops for the ACTIVE theme are set; the
+   other theme is unaffected. */
+#hero {
+  background: linear-gradient(135deg, var(--hero-primary-light, var(--bg)), var(--hero-secondary-light, var(--bg)));
+}
+#contact {
+  background: linear-gradient(
+    135deg,
+    var(--contact-primary-light, var(--bg-card)),
+    var(--contact-secondary-light, var(--bg-card))
+  );
+}
+@media (prefers-color-scheme: dark) {
+  #hero {
+    background: linear-gradient(135deg, var(--hero-primary-dark, var(--bg)), var(--hero-secondary-dark, var(--bg)));
+  }
+  #contact {
+    background: linear-gradient(
+      135deg,
+      var(--contact-primary-dark, var(--bg-card)),
+      var(--contact-secondary-dark, var(--bg-card))
+    );
+  }
+}
+:root[data-theme="light"] #hero {
+  background: linear-gradient(135deg, var(--hero-primary-light, var(--bg)), var(--hero-secondary-light, var(--bg)));
+}
+:root[data-theme="light"] #contact {
+  background: linear-gradient(
+    135deg,
+    var(--contact-primary-light, var(--bg-card)),
+    var(--contact-secondary-light, var(--bg-card))
+  );
+}
+:root[data-theme="dark"] #hero {
+  background: linear-gradient(135deg, var(--hero-primary-dark, var(--bg)), var(--hero-secondary-dark, var(--bg)));
+}
+:root[data-theme="dark"] #contact {
+  background: linear-gradient(
+    135deg,
+    var(--contact-primary-dark, var(--bg-card)),
+    var(--contact-secondary-dark, var(--bg-card))
+  );
+}
+
 * {
   box-sizing: border-box;
 }
