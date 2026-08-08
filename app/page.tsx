@@ -21,7 +21,7 @@ export default async function HomePage() {
 
   return (
     <main>
-      <Nav avatarUrl={c.avatarUrl} />
+      <Nav avatarUrl={c.avatarUrl} textColor={c.headerTextColor} />
 
       {/* HERO */}
       <section id="hero" className="relative pt-36 sm:pt-44 pb-24 sm:pb-28 px-6 sm:px-8 overflow-hidden" style={heroBg}>
@@ -377,7 +377,11 @@ export default async function HomePage() {
 
       <footer
         className="px-6 sm:px-8 py-7 flex flex-col sm:flex-row justify-between items-center sm:items-center gap-3 text-center sm:text-left"
-        style={{ background: "var(--nav-surface)", color: "var(--nav-mute)", borderTop: "1px solid rgba(255,255,255,0.06)" }}
+        style={{
+          background: "var(--nav-surface)",
+          color: c.footerTextColor || "var(--nav-mute)",
+          borderTop: "1px solid rgba(255,255,255,0.06)",
+        }}
       >
         <p className="font-mono text-xs">{c.footer.copyright}</p>
         <p className="font-mono text-xs">

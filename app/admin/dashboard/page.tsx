@@ -344,6 +344,25 @@ export default function DashboardPage() {
           <Field label="Footer copyright" value={content.footer.copyright} onChange={(v) => set({ footer: { copyright: v } })} />
         </Section>
 
+        <Section id="chrome" title="Header & Footer Text Color" open={open} setOpen={setOpen} toast={toast}>
+          <p className="text-sm mb-4" style={{ color: "var(--text-mute)" }}>
+            Changes the text/link color in the nav bar and footer. Their background stays the
+            theme's green surface — this only affects text.
+          </p>
+          <ColorField
+            label="Header (nav bar) text color"
+            value={content.headerTextColor || ""}
+            fallbackSwatch="#f1ede4"
+            onChange={(v) => set({ headerTextColor: v })}
+          />
+          <ColorField
+            label="Footer text color"
+            value={content.footerTextColor || ""}
+            fallbackSwatch="#c3beb2"
+            onChange={(v) => set({ footerTextColor: v })}
+          />
+        </Section>
+
         <Section id="data" title="Data Management" open={open} setOpen={setOpen} toast={toast}>
           <p className="text-sm mb-4" style={{ color: "var(--text-mute)" }}>
             Every publish archives the previous version. Export a full backup, restore a past snapshot, or import a JSON file.
@@ -507,6 +526,56 @@ function ColorPairField({
       <p className="text-[11px] mt-1.5" style={{ color: "var(--text-mute)" }}>
         Applies as a background gradient. Check text stays readable against your chosen colors.
       </p>
+    </div>
+  );
+}
+
+/** A single configurable color — swatch + hex text + reset to theme default. */
+function ColorField({
+  label,
+  value,
+  fallbackSwatch,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  fallbackSwatch: string;
+  onChange: (value: string) => void;
+}) {
+  return (
+    <div className="mb-4">
+      <div className="flex items-center justify-between mb-1">
+        <label className="block font-mono text-[10px] uppercase tracking-widest" style={{ color: "var(--text-mute)" }}>
+          {label}
+        </label>
+        {value && (
+          <button
+            type="button"
+            onClick={() => onChange("")}
+            className="font-mono text-[10px] uppercase tracking-wider"
+            style={{ color: "var(--clay)" }}
+          >
+            Reset to default
+          </button>
+        )}
+      </div>
+      <div className="flex items-center gap-1.5">
+        <input
+          type="color"
+          value={value || fallbackSwatch}
+          onChange={(e) => onChange(e.target.value)}
+          className="w-8 h-8 rounded border cursor-pointer"
+          style={{ borderColor: "var(--border)" }}
+          aria-label={`${label} color`}
+        />
+        <input
+          className="w-32 px-2 py-1.5 border rounded text-xs font-mono"
+          style={{ borderColor: "var(--border)", background: "var(--bg-card)" }}
+          placeholder="Theme default"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+        />
+      </div>
     </div>
   );
 }

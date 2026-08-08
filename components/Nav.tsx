@@ -5,9 +5,20 @@ import ThemeToggle from "./ThemeToggle";
 
 const LINKS = ["about", "expertise", "projects", "portfolio", "experience", "education", "milestones", "contact"];
 
-export default function Nav({ avatarUrl }: { avatarUrl: string | null }) {
+export default function Nav({ avatarUrl, textColor }: { avatarUrl: string | null; textColor?: string }) {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+
+  // Overrides the --nav-text / --nav-mute tokens for this subtree only, so
+  // every child that already reads those vars (logo, links, theme toggle,
+  // hamburger) picks up the custom color automatically. Falls back to the
+  // theme default when unset.
+  const navStyle = textColor
+    ? ({
+        "--nav-text": textColor,
+        "--nav-mute": `color-mix(in srgb, ${textColor} 78%, transparent)`,
+      } as React.CSSProperties)
+    : undefined;
 
   useEffect(() => {
     function onScroll() {
@@ -24,7 +35,7 @@ export default function Nav({ avatarUrl }: { avatarUrl: string | null }) {
   }
 
   return (
-    <nav className={`site-nav fixed top-0 inset-x-0 z-50 ${scrolled ? "is-scrolled" : ""}`}>
+    <nav className={`site-nav fixed top-0 inset-x-0 z-50 ${scrolled ? "is-scrolled" : ""}`} style={navStyle}>
       <div className="flex items-center justify-between px-6 sm:px-8 py-4">
         <a href="#hero" className="font-display italic text-xl flex items-center" style={{ color: "var(--nav-text)" }}>
           {avatarUrl ? (

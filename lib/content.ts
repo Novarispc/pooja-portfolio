@@ -35,6 +35,8 @@ export type SiteContent = {
   milestones: { title: string; date: string; desc: string; img: string | null }[];
   portfolioProjects: { id: string; title: string; desc: string; files: { name: string; url: string; type: string }[] }[];
   avatarUrl: string | null;
+  headerTextColor?: string;
+  footerTextColor?: string;
   meta: { updatedAt: string; status: "draft" | "published" };
 };
 
