@@ -153,6 +153,12 @@ export default function DashboardPage() {
           <Field label="Role / title" value={content.hero.role} onChange={(v) => set({ hero: { ...content.hero, role: v } })} />
           <Field label="Tagline" value={content.hero.tagline} onChange={(v) => set({ hero: { ...content.hero, tagline: v } })} />
           <TextArea label="Intro paragraph" value={content.hero.intro} rows={4} onChange={(v) => set({ hero: { ...content.hero, intro: v } })} />
+          <ColorPairField
+            label="Background colors"
+            primary={content.hero.colorPrimary || ""}
+            secondary={content.hero.colorSecondary || ""}
+            onChange={(p, s) => set({ hero: { ...content.hero, colorPrimary: p, colorSecondary: s } })}
+          />
         </Section>
 
         <Section id="about" title="About Section" open={open} setOpen={setOpen} toast={toast}>
@@ -329,6 +335,12 @@ export default function DashboardPage() {
           <Field label="LinkedIn URL" value={content.contact.linkedinUrl} onChange={(v) => set({ contact: { ...content.contact, linkedinUrl: v } })} />
           <Field label="LinkedIn display name" value={content.contact.linkedinName} onChange={(v) => set({ contact: { ...content.contact, linkedinName: v } })} />
           <Field label="Location" value={content.contact.location} onChange={(v) => set({ contact: { ...content.contact, location: v } })} />
+          <ColorPairField
+            label="Background colors"
+            primary={content.contact.colorPrimary || ""}
+            secondary={content.contact.colorSecondary || ""}
+            onChange={(p, s) => set({ contact: { ...content.contact, colorPrimary: p, colorSecondary: s } })}
+          />
           <Field label="Footer copyright" value={content.footer.copyright} onChange={(v) => set({ footer: { copyright: v } })} />
         </Section>
 
@@ -410,6 +422,91 @@ function Field({ label, value, onChange }: { label: string; value: string; onCha
         value={value}
         onChange={(e) => onChange(e.target.value)}
       />
+    </div>
+  );
+}
+
+/**
+ * A primary/secondary color pair used for a section's background gradient.
+ * Empty values fall back to the theme default on the public site — the
+ * "Reset" button clears both back to that state.
+ */
+function ColorPairField({
+  label,
+  primary,
+  secondary,
+  onChange,
+}: {
+  label: string;
+  primary: string;
+  secondary: string;
+  onChange: (primary: string, secondary: string) => void;
+}) {
+  const hasCustom = !!primary || !!secondary;
+  const swatchPrimary = primary || "#46593f";
+  const swatchSecondary = secondary || "#b8825a";
+
+  return (
+    <div className="mb-4">
+      <div className="flex items-center justify-between mb-1">
+        <label className="block font-mono text-[10px] uppercase tracking-widest" style={{ color: "var(--text-mute)" }}>
+          {label}
+        </label>
+        {hasCustom && (
+          <button
+            type="button"
+            onClick={() => onChange("", "")}
+            className="font-mono text-[10px] uppercase tracking-wider"
+            style={{ color: "var(--clay)" }}
+          >
+            Reset to default
+          </button>
+        )}
+      </div>
+      <div className="flex items-center gap-3">
+        <div className="flex items-center gap-1.5">
+          <input
+            type="color"
+            value={swatchPrimary}
+            onChange={(e) => onChange(e.target.value, secondary || swatchSecondary)}
+            className="w-8 h-8 rounded border cursor-pointer"
+            style={{ borderColor: "var(--border)" }}
+            aria-label={`${label} primary color`}
+          />
+          <input
+            className="w-24 px-2 py-1.5 border rounded text-xs font-mono"
+            style={{ borderColor: "var(--border)", background: "var(--bg-card)" }}
+            placeholder="Primary"
+            value={primary}
+            onChange={(e) => onChange(e.target.value, secondary)}
+          />
+        </div>
+        <div className="flex items-center gap-1.5">
+          <input
+            type="color"
+            value={swatchSecondary}
+            onChange={(e) => onChange(primary || swatchPrimary, e.target.value)}
+            className="w-8 h-8 rounded border cursor-pointer"
+            style={{ borderColor: "var(--border)" }}
+            aria-label={`${label} secondary color`}
+          />
+          <input
+            className="w-24 px-2 py-1.5 border rounded text-xs font-mono"
+            style={{ borderColor: "var(--border)", background: "var(--bg-card)" }}
+            placeholder="Secondary"
+            value={secondary}
+            onChange={(e) => onChange(primary, e.target.value)}
+          />
+        </div>
+      </div>
+      {hasCustom && (!primary || !secondary) && (
+        <p className="text-[11px] mt-1.5" style={{ color: "var(--clay)" }}>
+          Set both colors to apply the gradient — one alone falls back to the theme default.
+        </p>
+      )}
+      <p className="text-[11px] mt-1.5" style={{ color: "var(--text-mute)" }}>
+        Applies as a background gradient. Check text stays readable against your chosen colors.
+      </p>
     </div>
   );
 }

@@ -4,7 +4,9 @@
     "name": "Pooja\nRaviendran\nKutty",
     "role": "Landscape Architect",
     "tagline": "Landscape Planning · LVIA · Nature-Led Design",
-    "intro": "A landscape architect with UK consultancy experience across residential, commercial, renewable energy, infrastructure, and mixed-use developments — combining technical rigour with design thinking always rooted in the land."
+    "intro": "A landscape architect with UK consultancy experience across residential, commercial, renewable energy, infrastructure, and mixed-use developments — combining technical rigour with design thinking always rooted in the land.",
+    "colorPrimary": "",
+    "colorSecondary": ""
   },
   "about": {
     "title": "Shaping landscapes\nthat endure",
@@ -59,7 +61,9 @@
     "email": "pkutty66@gmail.com",
     "linkedinUrl": "https://www.linkedin.com/in/pooja-raviendran-kutty-88010b158/",
     "linkedinName": "Pooja Raviendran Kutty",
-    "location": "Cambridge, United Kingdom"
+    "location": "Cambridge, United Kingdom",
+    "colorPrimary": "",
+    "colorSecondary": ""
   },
   "footer": { "copyright": "© 2026 Pooja Raviendran Kutty · Cambridge, UK" },
   "milestones": [],

@@ -8,12 +8,23 @@ export const dynamic = "force-dynamic";
 export default async function HomePage() {
   const c = await readContent();
 
+  // Hero and Contact each get an optional admin-configurable primary/secondary
+  // gradient. Falls back to the standard theme background when unset.
+  const heroBg =
+    c.hero.colorPrimary && c.hero.colorSecondary
+      ? { background: `linear-gradient(135deg, ${c.hero.colorPrimary}, ${c.hero.colorSecondary})` }
+      : undefined;
+  const contactBg =
+    c.contact.colorPrimary && c.contact.colorSecondary
+      ? { background: `linear-gradient(135deg, ${c.contact.colorPrimary}, ${c.contact.colorSecondary})` }
+      : { background: "var(--bg-card)" };
+
   return (
     <main>
       <Nav avatarUrl={c.avatarUrl} />
 
       {/* HERO */}
-      <section id="hero" className="relative pt-36 sm:pt-44 pb-24 sm:pb-28 px-6 sm:px-8 overflow-hidden">
+      <section id="hero" className="relative pt-36 sm:pt-44 pb-24 sm:pb-28 px-6 sm:px-8 overflow-hidden" style={heroBg}>
         <HeroScene />
         <div className="relative max-w-6xl mx-auto">
           <span className="eyebrow mb-5 block">{c.hero.coord}</span>
@@ -342,7 +353,7 @@ export default async function HomePage() {
       </Reveal>
 
       {/* CONTACT */}
-      <Reveal as="section" id="contact" className="section relative px-6 sm:px-8" style={{ background: "var(--bg-card)" }}>
+      <Reveal as="section" id="contact" className="section relative px-6 sm:px-8" style={contactBg}>
         <span className="section-edge" />
         <div className="max-w-4xl mx-auto">
           <span className="eyebrow mb-5 block">Contact</span>
