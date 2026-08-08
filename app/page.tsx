@@ -58,9 +58,9 @@ export default async function HomePage() {
       {/* ABOUT */}
       <Reveal as="section" id="about" className="section relative px-6 sm:px-8" style={{ background: "var(--bg-card)" }}>
         <span className="section-edge" />
-        <div className="max-w-5xl mx-auto">
+        <div className={c.avatarUrl ? "max-w-5xl mx-auto" : "max-w-2xl mx-auto"}>
           <span className="eyebrow mb-5 block">About</span>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12 items-start">
+          <div className={c.avatarUrl ? "grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12 items-start" : ""}>
             {c.avatarUrl && (
               <div className="md:col-span-1">
                 {/* eslint-disable-next-line @next/next/no-img-element */}

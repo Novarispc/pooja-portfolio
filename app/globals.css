@@ -402,12 +402,10 @@ section[id] {
   }
 }
 
-/* Hero survey scene ---------------------------------------------------------
-   Concentric contour rings draw themselves in around the coordinate marker
-   (pathLength=1 trick: dasharray/dashoffset of 1 works regardless of each
-   ring's actual geometry), then the whole ring group drifts in one very
-   slow, continuous rotation. The marker pulses like a located GPS point —
-   a direct echo of the "52.2053° N, 0.1218° E" eyebrow above the headline. */
+/* Hero backdrop ---------------------------------------------------------
+   Three quiet contour rings around the coordinate marker (echoes the
+   "52.2053° N, 0.1218° E" eyebrow above the headline). One subtle, slow
+   breathing fade is the only motion — deliberately restrained. */
 .hero-contour {
   position: absolute;
   inset: 0;
@@ -418,82 +416,19 @@ section[id] {
 }
 
 .hero-scene-rings {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: rings-rotate 240s linear infinite;
-  animation-delay: 1.6s;
+  animation: rings-breathe 10s var(--ease) infinite;
 }
-.hero-scene-rings path {
-  stroke-dasharray: 1;
-  stroke-dashoffset: 1;
-  animation: ring-draw 1.7s var(--ease-out) forwards;
-}
-@keyframes ring-draw {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-@keyframes rings-rotate {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.hero-scene-pin circle.ping {
-  fill: none;
-  stroke: var(--clay);
-  stroke-width: 1.3;
-  opacity: 0;
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: pin-ping 3.4s var(--ease) infinite;
-}
-.hero-scene-pin circle.ping:nth-of-type(1) {
-  animation-delay: 1.9s;
-}
-.hero-scene-pin circle.ping:nth-of-type(2) {
-  animation-delay: 3.03s;
-}
-.hero-scene-pin circle.ping:nth-of-type(3) {
-  animation-delay: 4.17s;
-}
-@keyframes pin-ping {
-  0% {
-    r: 4;
-    opacity: 0.5;
-  }
-  70% {
-    opacity: 0;
-  }
-  100% {
-    r: 32;
-    opacity: 0;
-  }
-}
-.hero-scene-pin circle.core {
-  animation: pin-core-glow 3.4s var(--ease) infinite;
-}
-@keyframes pin-core-glow {
-  0%, 55%, 100% {
+@keyframes rings-breathe {
+  0%, 100% {
     opacity: 1;
   }
-  75% {
-    opacity: 0.55;
+  50% {
+    opacity: 0.72;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .hero-scene-rings {
-    animation: none;
-  }
-  .hero-scene-rings path {
-    animation: none;
-    stroke-dashoffset: 0;
-  }
-  .hero-scene-pin circle.ping {
-    display: none;
-  }
-  .hero-scene-pin circle.core {
     animation: none;
   }
 }
