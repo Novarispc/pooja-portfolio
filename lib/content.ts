@@ -29,10 +29,24 @@ export type SiteContent = {
  * localhost and on Vercel.
  */
 
+/**
+ * Reads via a raw fetch (not the SDK's storage.download()) so we can force
+ * a cache-busting query param and no-cache headers — Supabase Storage sits
+ * behind a CDN, and objects default to a 1hr Cache-Control unless
+ * overridden, which was serving stale content right after a fresh publish.
+ */
 async function downloadJson<T>(path: string): Promise<T | null> {
-  const { data, error } = await supabaseAdmin.storage.from(BUCKET).download(path);
-  if (error || !data) return null;
-  const text = await data.text();
+  const url = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/${BUCKET}/${path}?t=${Date.now()}`;
+  const res = await fetch(url, {
+    headers: {
+      apikey: process.env.SUPABASE_SERVICE_ROLE_KEY!,
+      Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
+      "Cache-Control": "no-cache",
+    },
+    cache: "no-store",
+  });
+  if (!res.ok) return null;
+  const text = await res.text();
   try {
     return JSON.parse(text) as T;
   } catch {
@@ -44,6 +58,7 @@ async function uploadJson(path: string, value: unknown) {
   const body = JSON.stringify(value, null, 2);
   const { error } = await supabaseAdmin.storage.from(BUCKET).upload(path, body, {
     contentType: "application/json",
+    cacheControl: "0",
     upsert: true,
   });
   if (error) throw error;
