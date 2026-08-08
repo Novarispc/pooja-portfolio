@@ -1,9 +1,8 @@
-import { promises as fs } from "fs";
-import path from "path";
+import { supabaseAdmin } from "./supabaseAdmin";
 
-const DATA_DIR = path.join(process.cwd(), "data");
-const CONTENT_PATH = path.join(DATA_DIR, "content.json");
-const HISTORY_DIR = path.join(DATA_DIR, "history");
+const BUCKET = "site-data";
+const CONTENT_KEY = "content.json";
+const HISTORY_PREFIX = "history";
 const MAX_SNAPSHOTS = 30;
 
 export type SiteContent = {
@@ -23,78 +22,80 @@ export type SiteContent = {
 };
 
 /**
- * Vercel's serverless functions run on a read-only filesystem (only /tmp is
- * writable, and it isn't persistent or shared across invocations). Writes
- * here throw a tagged error the API routes turn into a clear 503 instead of
- * a raw filesystem crash.
+ * Content is stored as a single JSON object in Supabase Storage (private
+ * bucket, service-role access only) rather than the local filesystem —
+ * Vercel's serverless functions run on a read-only filesystem, so writes
+ * there never persist. Storage-backed reads/writes work identically on
+ * localhost and on Vercel.
  */
-export const PERSISTENCE_UNAVAILABLE_MESSAGE =
-  "Content editing isn't available on this deployment: Vercel's filesystem is read-only. " +
-  "Run the app locally to edit and publish, or connect a persistent store (e.g. Vercel Blob + KV) for live editing on Vercel.";
 
-function assertWritable() {
-  if (process.env.VERCEL) {
-    const err = new Error(PERSISTENCE_UNAVAILABLE_MESSAGE);
-    err.name = "PersistenceUnavailableError";
-    throw err;
+async function downloadJson<T>(path: string): Promise<T | null> {
+  const { data, error } = await supabaseAdmin.storage.from(BUCKET).download(path);
+  if (error || !data) return null;
+  const text = await data.text();
+  try {
+    return JSON.parse(text) as T;
+  } catch {
+    return null;
   }
 }
 
-async function ensureDirs() {
-  await fs.mkdir(DATA_DIR, { recursive: true });
-  await fs.mkdir(HISTORY_DIR, { recursive: true });
+async function uploadJson(path: string, value: unknown) {
+  const body = JSON.stringify(value, null, 2);
+  const { error } = await supabaseAdmin.storage.from(BUCKET).upload(path, body, {
+    contentType: "application/json",
+    upsert: true,
+  });
+  if (error) throw error;
 }
 
 export async function readContent(): Promise<SiteContent> {
-  try {
-    const raw = await fs.readFile(CONTENT_PATH, "utf-8");
-    return JSON.parse(raw);
-  } catch {
-    const seed = await import("../data/seed.json");
-    return seed.default as SiteContent;
-  }
+  const existing = await downloadJson<SiteContent>(CONTENT_KEY);
+  if (existing) return existing;
+  const seed = await import("../data/seed.json");
+  return seed.default as SiteContent;
 }
 
 export async function writeContent(content: SiteContent, opts: { publish: boolean }) {
-  assertWritable();
-  await ensureDirs();
-
   // Archive the previous version before overwriting
-  try {
-    const prev = await fs.readFile(CONTENT_PATH, "utf-8");
+  const prev = await downloadJson<SiteContent>(CONTENT_KEY);
+  if (prev) {
     const stamp = new Date().toISOString().replace(/[:.]/g, "-");
-    await fs.writeFile(path.join(HISTORY_DIR, `${stamp}.json`), prev, "utf-8");
+    await uploadJson(`${HISTORY_PREFIX}/${stamp}.json`, prev);
     await pruneHistory();
-  } catch {
-    /* no existing file yet — nothing to archive */
   }
 
   const next: SiteContent = {
     ...content,
     meta: { updatedAt: new Date().toISOString(), status: opts.publish ? "published" : "draft" },
   };
-  await fs.writeFile(CONTENT_PATH, JSON.stringify(next, null, 2), "utf-8");
+  await uploadJson(CONTENT_KEY, next);
   return next;
 }
 
 async function pruneHistory() {
-  const files = (await fs.readdir(HISTORY_DIR)).sort();
-  const excess = files.length - MAX_SNAPSHOTS;
+  const { data, error } = await supabaseAdmin.storage.from(BUCKET).list(HISTORY_PREFIX, {
+    sortBy: { column: "name", order: "asc" },
+  });
+  if (error || !data) return;
+  const excess = data.length - MAX_SNAPSHOTS;
   if (excess > 0) {
-    for (const f of files.slice(0, excess)) {
-      await fs.unlink(path.join(HISTORY_DIR, f)).catch(() => {});
-    }
+    const toRemove = data.slice(0, excess).map((f) => `${HISTORY_PREFIX}/${f.name}`);
+    await supabaseAdmin.storage.from(BUCKET).remove(toRemove);
   }
 }
 
 export async function listHistory() {
-  await ensureDirs();
-  const files = (await fs.readdir(HISTORY_DIR)).sort().reverse();
-  return files;
+  const { data, error } = await supabaseAdmin.storage.from(BUCKET).list(HISTORY_PREFIX, {
+    sortBy: { column: "name", order: "desc" },
+  });
+  if (error || !data) return [];
+  return data.map((f) => f.name);
 }
 
 export async function readHistorySnapshot(filename: string) {
-  const safe = path.basename(filename); // prevent path traversal
-  const raw = await fs.readFile(path.join(HISTORY_DIR, safe), "utf-8");
-  return JSON.parse(raw) as SiteContent;
+  const safe = filename.replace(/[/\\]/g, ""); // prevent path traversal
+  const snapshot = await downloadJson<SiteContent>(`${HISTORY_PREFIX}/${safe}`);
+  if (!snapshot) throw new Error("Snapshot not found");
+  return snapshot;
 }
