@@ -9,6 +9,7 @@ type Toast = { section: string; msg: string } | null;
 export default function DashboardPage() {
   const router = useRouter();
   const [content, setContent] = useState<SiteContent | null>(null);
+  const [activeTab, setActiveTab] = useState<"content" | "theme">("content");
   const [open, setOpen] = useState<string>("hero");
   const [toast, setToast] = useState<Toast>(null);
   const [saving, setSaving] = useState(false);
@@ -146,25 +147,37 @@ export default function DashboardPage() {
         </div>
       </header>
 
-      <div className="max-w-3xl mx-auto py-8 px-6">
+      <div className="max-w-3xl mx-auto px-6 pt-6 flex gap-1 border-b" style={{ borderColor: "var(--border)" }}>
+        {(
+          [
+            ["content", "Content"],
+            ["theme", "Theme & Colors"],
+          ] as const
+        ).map(([id, label]) => (
+          <button
+            key={id}
+            onClick={() => setActiveTab(id)}
+            className="font-mono text-[11px] uppercase tracking-wider px-4 py-2.5 -mb-px border-b-2 transition-colors"
+            style={{
+              color: activeTab === id ? "var(--sage)" : "var(--text-mute)",
+              borderColor: activeTab === id ? "var(--sage)" : "transparent",
+            }}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      <div className="max-w-3xl mx-auto py-8 px-6" style={{ display: activeTab === "content" ? "block" : "none" }}>
         <Section id="hero" title="Profile & Hero" open={open} setOpen={setOpen} toast={toast}>
           <Field label="Coordinate / location line" value={content.hero.coord} onChange={(v) => set({ hero: { ...content.hero, coord: v } })} />
           <TextArea label="Full name (new line = stacked)" value={content.hero.name} rows={3} onChange={(v) => set({ hero: { ...content.hero, name: v } })} />
           <Field label="Role / title" value={content.hero.role} onChange={(v) => set({ hero: { ...content.hero, role: v } })} />
           <Field label="Tagline" value={content.hero.tagline} onChange={(v) => set({ hero: { ...content.hero, tagline: v } })} />
           <TextArea label="Intro paragraph" value={content.hero.intro} rows={4} onChange={(v) => set({ hero: { ...content.hero, intro: v } })} />
-          <ColorPairField
-            label="Background colors — light theme"
-            primary={content.hero.colorPrimaryLight || ""}
-            secondary={content.hero.colorSecondaryLight || ""}
-            onChange={(p, s) => set({ hero: { ...content.hero, colorPrimaryLight: p, colorSecondaryLight: s } })}
-          />
-          <ColorPairField
-            label="Background colors — dark theme"
-            primary={content.hero.colorPrimaryDark || ""}
-            secondary={content.hero.colorSecondaryDark || ""}
-            onChange={(p, s) => set({ hero: { ...content.hero, colorPrimaryDark: p, colorSecondaryDark: s } })}
-          />
+          <p className="text-[11px]" style={{ color: "var(--text-mute)" }}>
+            Background colors have moved to the <strong>Theme &amp; Colors</strong> tab above.
+          </p>
         </Section>
 
         <Section id="about" title="About Section" open={open} setOpen={setOpen} toast={toast}>
@@ -341,38 +354,10 @@ export default function DashboardPage() {
           <Field label="LinkedIn URL" value={content.contact.linkedinUrl} onChange={(v) => set({ contact: { ...content.contact, linkedinUrl: v } })} />
           <Field label="LinkedIn display name" value={content.contact.linkedinName} onChange={(v) => set({ contact: { ...content.contact, linkedinName: v } })} />
           <Field label="Location" value={content.contact.location} onChange={(v) => set({ contact: { ...content.contact, location: v } })} />
-          <ColorPairField
-            label="Background colors — light theme"
-            primary={content.contact.colorPrimaryLight || ""}
-            secondary={content.contact.colorSecondaryLight || ""}
-            onChange={(p, s) => set({ contact: { ...content.contact, colorPrimaryLight: p, colorSecondaryLight: s } })}
-          />
-          <ColorPairField
-            label="Background colors — dark theme"
-            primary={content.contact.colorPrimaryDark || ""}
-            secondary={content.contact.colorSecondaryDark || ""}
-            onChange={(p, s) => set({ contact: { ...content.contact, colorPrimaryDark: p, colorSecondaryDark: s } })}
-          />
           <Field label="Footer copyright" value={content.footer.copyright} onChange={(v) => set({ footer: { copyright: v } })} />
-        </Section>
-
-        <Section id="chrome" title="Header & Footer Text Color" open={open} setOpen={setOpen} toast={toast}>
-          <p className="text-sm mb-4" style={{ color: "var(--text-mute)" }}>
-            Changes the text/link color in the nav bar and footer. Their background stays the
-            theme's green surface — this only affects text.
+          <p className="text-[11px] mt-1" style={{ color: "var(--text-mute)" }}>
+            Background and header/footer text colors have moved to the <strong>Theme &amp; Colors</strong> tab above.
           </p>
-          <ColorField
-            label="Header (nav bar) text color"
-            value={content.headerTextColor || ""}
-            fallbackSwatch="#f1ede4"
-            onChange={(v) => set({ headerTextColor: v })}
-          />
-          <ColorField
-            label="Footer text color"
-            value={content.footerTextColor || ""}
-            fallbackSwatch="#c3beb2"
-            onChange={(v) => set({ footerTextColor: v })}
-          />
         </Section>
 
         <Section id="data" title="Data Management" open={open} setOpen={setOpen} toast={toast}>
@@ -403,6 +388,65 @@ export default function DashboardPage() {
               ))}
             </ul>
           )}
+        </Section>
+      </div>
+
+      <div className="max-w-3xl mx-auto py-8 px-6" style={{ display: activeTab === "theme" ? "block" : "none" }}>
+        <Section id="chrome" title="Header & Footer Text Color" open={open} setOpen={setOpen} toast={toast}>
+          <p className="text-sm mb-4" style={{ color: "var(--text-mute)" }}>
+            Changes the text/link color in the nav bar and footer. Their background stays the
+            theme's green surface — this only affects text.
+          </p>
+          <ColorField
+            label="Header (nav bar) text color"
+            value={content.headerTextColor || ""}
+            fallbackSwatch="#f1ede4"
+            onChange={(v) => set({ headerTextColor: v })}
+          />
+          <ColorField
+            label="Footer text color"
+            value={content.footerTextColor || ""}
+            fallbackSwatch="#c3beb2"
+            onChange={(v) => set({ footerTextColor: v })}
+          />
+        </Section>
+
+        <Section id="heroColors" title="Hero Background Colors" open={open} setOpen={setOpen} toast={toast}>
+          <p className="text-sm mb-4" style={{ color: "var(--text-mute)" }}>
+            Set both primary and secondary to apply a gradient — set independently per theme, so
+            light and dark mode can look completely different.
+          </p>
+          <ColorPairField
+            label="Light theme"
+            primary={content.hero.colorPrimaryLight || ""}
+            secondary={content.hero.colorSecondaryLight || ""}
+            onChange={(p, s) => set({ hero: { ...content.hero, colorPrimaryLight: p, colorSecondaryLight: s } })}
+          />
+          <ColorPairField
+            label="Dark theme"
+            primary={content.hero.colorPrimaryDark || ""}
+            secondary={content.hero.colorSecondaryDark || ""}
+            onChange={(p, s) => set({ hero: { ...content.hero, colorPrimaryDark: p, colorSecondaryDark: s } })}
+          />
+        </Section>
+
+        <Section id="contactColors" title="Contact Background Colors" open={open} setOpen={setOpen} toast={toast}>
+          <p className="text-sm mb-4" style={{ color: "var(--text-mute)" }}>
+            Set both primary and secondary to apply a gradient — set independently per theme, so
+            light and dark mode can look completely different.
+          </p>
+          <ColorPairField
+            label="Light theme"
+            primary={content.contact.colorPrimaryLight || ""}
+            secondary={content.contact.colorSecondaryLight || ""}
+            onChange={(p, s) => set({ contact: { ...content.contact, colorPrimaryLight: p, colorSecondaryLight: s } })}
+          />
+          <ColorPairField
+            label="Dark theme"
+            primary={content.contact.colorPrimaryDark || ""}
+            secondary={content.contact.colorSecondaryDark || ""}
+            onChange={(p, s) => set({ contact: { ...content.contact, colorPrimaryDark: p, colorSecondaryDark: s } })}
+          />
         </Section>
       </div>
     </main>
