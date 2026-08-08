@@ -1,74 +1,103 @@
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&family=DM+Mono:wght@400&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500;1,600&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 :root {
-  --bg: #f5f1e9;
+  --bg: #f6f2ea;
   --bg-card: #eae5da;
-  --text-head: #253224;
-  --text-body: #2f342d;
-  --text-mute: #7a7d74;
-  --sage: #4a5e48;
+  --bg-raised: #f1ece1;
+  --text-head: #232f22;
+  --text-body: #363b33;
+  --text-mute: #71756b;
+  --sage: #46593f;
   --sage-mid: #6b8268;
   --sage-pale: #dde8da;
-  --clay: #be8d65;
-  --border: rgba(107, 130, 104, 0.18);
-  --nav-surface: #3d5039;
-  --nav-text: #ede8df;
-  --nav-mute: #c8c3ba;
+  --clay: #b8825a;
+  --clay-soft: #d9ac87;
+  --border: rgba(107, 130, 104, 0.2);
+  --border-strong: rgba(70, 89, 63, 0.38);
+  --hairline: rgba(35, 47, 34, 0.09);
+  --nav-surface: #3a4d36;
+  --nav-surface-scrolled: #34452f;
+  --nav-text: #f1ede4;
+  --nav-mute: #c3beb2;
+  --shadow-tint: 35, 47, 34;
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --ease-out: cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 /* Dark — follows OS preference unless overridden by the explicit toggle below */
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #1a1917;
-    --bg-card: #222120;
-    --text-head: #ede8df;
-    --text-body: #c0bbb2;
-    --text-mute: #726e66;
-    --sage: #7ea87b;
-    --sage-mid: #9bbb97;
-    --sage-pale: #1e241c;
-    --clay: #c8956c;
-    --border: rgba(145, 168, 138, 0.15);
-    --nav-surface: #2c4128;
-    --nav-text: #ede8df;
-    --nav-mute: #c8c3ba;
+    --bg: #171614;
+    --bg-card: #201f1c;
+    --bg-raised: #262521;
+    --text-head: #efeae0;
+    --text-body: #c4beb3;
+    --text-mute: #7c7871;
+    --sage: #86af81;
+    --sage-mid: #a2c29c;
+    --sage-pale: #1f261c;
+    --clay: #cf9c72;
+    --clay-soft: #dcb08a;
+    --border: rgba(150, 173, 143, 0.16);
+    --border-strong: rgba(162, 194, 156, 0.32);
+    --hairline: rgba(239, 234, 224, 0.08);
+    --nav-surface: #27331f;
+    --nav-surface-scrolled: #212b1b;
+    --nav-text: #f1ede4;
+    --nav-mute: #c3beb2;
+    --shadow-tint: 0, 0, 0;
   }
 }
 
 /* Explicit toggle — always wins over the media query, in both directions */
 :root[data-theme="dark"] {
-  --bg: #1a1917;
-  --bg-card: #222120;
-  --text-head: #ede8df;
-  --text-body: #c0bbb2;
-  --text-mute: #726e66;
-  --sage: #7ea87b;
-  --sage-mid: #9bbb97;
-  --sage-pale: #1e241c;
-  --clay: #c8956c;
-  --border: rgba(145, 168, 138, 0.15);
-  --nav-surface: #2c4128;
-  --nav-text: #ede8df;
-  --nav-mute: #c8c3ba;
+  --bg: #171614;
+  --bg-card: #201f1c;
+  --bg-raised: #262521;
+  --text-head: #efeae0;
+  --text-body: #c4beb3;
+  --text-mute: #7c7871;
+  --sage: #86af81;
+  --sage-mid: #a2c29c;
+  --sage-pale: #1f261c;
+  --clay: #cf9c72;
+  --clay-soft: #dcb08a;
+  --border: rgba(150, 173, 143, 0.16);
+  --border-strong: rgba(162, 194, 156, 0.32);
+  --hairline: rgba(239, 234, 224, 0.08);
+  --nav-surface: #27331f;
+  --nav-surface-scrolled: #212b1b;
+  --nav-text: #f1ede4;
+  --nav-mute: #c3beb2;
+  --shadow-tint: 0, 0, 0;
 }
 :root[data-theme="light"] {
-  --bg: #f5f1e9;
+  --bg: #f6f2ea;
   --bg-card: #eae5da;
-  --text-head: #253224;
-  --text-body: #2f342d;
-  --text-mute: #7a7d74;
-  --sage: #4a5e48;
+  --bg-raised: #f1ece1;
+  --text-head: #232f22;
+  --text-body: #363b33;
+  --text-mute: #71756b;
+  --sage: #46593f;
   --sage-mid: #6b8268;
   --sage-pale: #dde8da;
-  --clay: #be8d65;
-  --border: rgba(107, 130, 104, 0.18);
-  --nav-surface: #3d5039;
-  --nav-text: #ede8df;
-  --nav-mute: #c8c3ba;
+  --clay: #b8825a;
+  --clay-soft: #d9ac87;
+  --border: rgba(107, 130, 104, 0.2);
+  --border-strong: rgba(70, 89, 63, 0.38);
+  --hairline: rgba(35, 47, 34, 0.09);
+  --nav-surface: #3a4d36;
+  --nav-surface-scrolled: #34452f;
+  --nav-text: #f1ede4;
+  --nav-mute: #c3beb2;
+  --shadow-tint: 35, 47, 34;
 }
 
 * {
@@ -79,12 +108,41 @@ html {
   scroll-behavior: smooth;
 }
 
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
 body {
   background: var(--bg);
   color: var(--text-body);
   font-family: "DM Sans", system-ui, sans-serif;
-  line-height: 1.65;
-  transition: background 0.3s ease, color 0.3s ease;
+  font-size: 16px;
+  line-height: 1.7;
+  letter-spacing: 0.005em;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  transition: background 0.4s ease, color 0.4s ease;
+}
+
+::selection {
+  background: var(--sage);
+  color: var(--bg);
+}
+
+:focus-visible {
+  outline: 2px solid var(--clay);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
 .font-display {
@@ -93,87 +151,127 @@ body {
 
 .font-mono {
   font-family: "DM Mono", ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+h1, h2, h3, h4 {
+  text-wrap: balance;
+}
+
+/* Fluid display scale — one consistent rhythm across breakpoints instead of per-section clamps */
+.h-hero {
+  font-size: clamp(2.75rem, 4.6vw + 1.2rem, 5.5rem);
+  line-height: 1.04;
+  letter-spacing: -0.01em;
+}
+.h-section {
+  font-size: clamp(2rem, 1.6vw + 1.5rem, 2.75rem);
+  line-height: 1.12;
+  letter-spacing: -0.005em;
 }
 
 .eyebrow {
   font-family: "DM Mono", monospace;
-  font-size: 0.66rem;
-  letter-spacing: 0.22em;
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.24em;
   text-transform: uppercase;
   color: var(--clay);
   display: inline-flex;
   align-items: center;
-  gap: 0.7rem;
+  gap: 0.75rem;
 }
 .eyebrow::before {
   content: "";
-  width: 26px;
+  width: 30px;
   height: 1px;
   background: currentColor;
   opacity: 0.85;
 }
 
-/* Cards always sit on --bg-card so they read against either page background;
-   sections that are themselves --bg-card (Projects) override back to --bg. */
+/* Section rhythm ---------------------------------------------------- */
+.section {
+  padding-block: clamp(4.5rem, 9vw, 7.5rem);
+  position: relative;
+}
+
+/* Keeps anchor jumps (nav links, #hash) from tucking section headings under the fixed nav */
+section[id] {
+  scroll-margin-top: 88px;
+}
+
+/* Hairline divider used between alternating-background sections instead of a hard edge */
+.section-edge {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--hairline) 18%, var(--hairline) 82%, transparent 100%);
+}
+
+/* Cards --------------------------------------------------------------- */
 .card {
   background: var(--bg-card);
-  border: 1.5px solid var(--border);
-  border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(37, 50, 36, 0.05);
-  transition: transform 0.3s cubic-bezier(0.22, 0.61, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 0.61, 0.36, 1),
-    border-color 0.3s ease, background 0.3s ease;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  box-shadow: 0 1px 2px rgba(var(--shadow-tint), 0.05);
+  transition: transform 0.45s var(--ease), box-shadow 0.45s var(--ease), border-color 0.35s ease, background 0.35s ease;
 }
 .card:hover {
-  transform: translateY(-6px);
-  border-color: var(--sage);
-  background: var(--sage-pale);
-  box-shadow: 0 18px 40px rgba(37, 50, 36, 0.14), 0 4px 14px rgba(74, 94, 72, 0.12);
+  transform: translateY(-5px);
+  border-color: var(--border-strong);
+  background: var(--bg-raised);
+  box-shadow: 0 20px 44px rgba(var(--shadow-tint), 0.12), 0 6px 16px rgba(var(--shadow-tint), 0.08);
 }
 
 /* Portfolio cards get their own clay accent so they read distinctly from Projects (sage-topped) */
 .card-portfolio {
-  border-top: 3px solid var(--clay);
+  border-top: 2.5px solid var(--clay);
 }
 .card-portfolio:hover {
   border-color: var(--clay);
-  background: color-mix(in srgb, var(--clay) 8%, var(--bg-card));
+  border-top-color: var(--clay);
+  background: color-mix(in srgb, var(--clay) 6%, var(--bg-raised));
 }
 
 /* Projects section sits on --bg-card, so its cards flip back to --bg for contrast */
 .card-projects {
   background: var(--bg);
-  border-top: 3px solid var(--sage);
+  border-top: 2.5px solid var(--sage);
 }
 .card-projects:hover {
   background: var(--sage-pale);
   border-color: var(--sage);
+  border-top-color: var(--sage);
 }
 
 /* Milestone cards get a sage-mid left accent */
 .card-milestone {
-  border-left: 3px solid var(--sage-mid);
+  border-left: 2.5px solid var(--sage-mid);
 }
 .card-milestone:hover {
   border-color: var(--sage-mid);
+  border-left-color: var(--sage-mid);
 }
 
-/* Contact links */
+/* Contact links --------------------------------------------------------- */
 .contact-link {
   position: relative;
   display: inline-block;
-  transition: color 0.25s ease;
+  transition: color 0.3s ease;
 }
 .contact-link::after {
   content: "";
   position: absolute;
   left: 0;
-  bottom: -2px;
+  bottom: -3px;
   width: 100%;
   height: 1px;
   background: currentColor;
   transform: scaleX(0);
   transform-origin: left;
-  transition: transform 0.25s ease;
+  transition: transform 0.35s var(--ease-out);
 }
 .contact-link:hover {
   color: var(--clay) !important;
@@ -182,18 +280,19 @@ body {
   transform: scaleX(1);
 }
 
-/* Buttons */
+/* Buttons ----------------------------------------------------------------- */
 .btn {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.85rem 2rem;
+  gap: 0.6rem;
+  padding: 0.9rem 2.1rem;
   font-size: 0.72rem;
   font-weight: 500;
-  letter-spacing: 0.14em;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
-  border-radius: 4px;
-  transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease, transform 0.25s ease, box-shadow 0.25s ease;
+  border-radius: var(--radius-sm);
+  transition: background 0.35s ease, border-color 0.35s ease, color 0.35s ease, transform 0.35s var(--ease),
+    box-shadow 0.35s var(--ease);
 }
 .btn-primary {
   background: var(--sage);
@@ -204,11 +303,11 @@ body {
   background: var(--clay);
   border-color: var(--clay);
   transform: translateY(-3px);
-  box-shadow: 0 12px 28px rgba(190, 141, 101, 0.35);
+  box-shadow: 0 14px 30px rgba(184, 130, 90, 0.32);
 }
 .btn-outline {
   background: transparent;
-  border: 1.5px solid var(--border);
+  border: 1.5px solid var(--border-strong);
   color: var(--text-head);
 }
 .btn-outline:hover {
@@ -218,13 +317,13 @@ body {
   transform: translateY(-3px);
 }
 
-/* File chips (Portfolio downloads) */
+/* File chips (Portfolio downloads) --------------------------------------- */
 .file-pill {
   border: 1.5px solid var(--border);
   background: transparent;
   color: var(--sage);
-  border-radius: 4px;
-  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+  border-radius: var(--radius-sm);
+  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.3s var(--ease);
 }
 .file-pill:hover {
   background: var(--sage);
@@ -238,7 +337,7 @@ body {
   border: 1.5px solid var(--border);
   background: var(--bg);
   color: var(--text-body);
-  transition: background 0.25s ease, color 0.25s ease, border-color 0.25s ease, transform 0.25s ease;
+  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.3s var(--ease);
 }
 .tool-pill:hover {
   background: var(--clay);
@@ -249,5 +348,97 @@ body {
 
 /* Project tag badge */
 .tag-badge {
-  transition: background 0.25s ease, color 0.25s ease;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Nav ----------------------------------------------------------------------- */
+.site-nav {
+  background: var(--nav-surface);
+  border-bottom: 1px solid transparent;
+  transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+}
+.site-nav.is-scrolled {
+  background: var(--nav-surface-scrolled);
+  border-bottom-color: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
+}
+.nav-link {
+  position: relative;
+  color: var(--nav-mute);
+  transition: color 0.3s ease;
+}
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 0%;
+  height: 1px;
+  background: var(--clay-soft);
+  transition: width 0.3s var(--ease-out);
+}
+.nav-link:hover {
+  color: var(--nav-text);
+}
+.nav-link:hover::after {
+  width: 100%;
+}
+
+/* Scroll reveal --------------------------------------------------------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out);
+}
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Decorative contour lines ------------------------------------------------ */
+.contour-field path {
+  animation: contour-drift 46s linear infinite;
+}
+@keyframes contour-drift {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -1400;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .contour-field path {
+    animation: none;
+  }
+}
+
+/* Hero backdrop: contour lines fade toward the edges so they read as
+   texture behind the type, not competing linework */
+.hero-contour {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  -webkit-mask-image: radial-gradient(ellipse 85% 70% at 62% 40%, #000 45%, transparent 88%);
+  mask-image: radial-gradient(ellipse 85% 70% at 62% 40%, #000 45%, transparent 88%);
+}
+
+/* Scroll cue */
+.scroll-cue {
+  animation: scroll-cue-bob 2.6s var(--ease) infinite;
+}
+@keyframes scroll-cue-bob {
+  0%, 100% { transform: translateY(0); opacity: 0.55; }
+  50% { transform: translateY(7px); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue { animation: none; }
 }
