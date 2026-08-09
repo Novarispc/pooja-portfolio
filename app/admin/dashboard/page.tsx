@@ -188,7 +188,10 @@ export default function DashboardPage() {
           </label>
           {content.about.paragraphs.map((p, i) => (
             <ItemBox key={i} index={i} total={content.about.paragraphs.length}
-              onRemove={() => set({ about: { ...content.about, paragraphs: content.about.paragraphs.filter((_, j) => j !== i) } })}>
+              onRemove={() => {
+                set({ about: { ...content.about, paragraphs: content.about.paragraphs.filter((_, j) => j !== i) } });
+                flash("about", "Removed — click Publish to save");
+              }}>
               <TextArea label="" value={p} rows={3}
                 onChange={(v) => {
                   const next = [...content.about.paragraphs]; next[i] = v;
@@ -223,7 +226,10 @@ export default function DashboardPage() {
           </div>
           {content.avatarUrl && (
             <button className="font-mono text-[10px] uppercase tracking-wider" style={{ color: "var(--clay)" }}
-              onClick={() => set({ avatarUrl: null })}>
+              onClick={() => {
+                set({ avatarUrl: null });
+                flash("avatar", "Removed — click Publish to save");
+              }}>
               Remove photo
             </button>
           )}
@@ -232,7 +238,10 @@ export default function DashboardPage() {
         <Section id="expertise" title="Expertise Cards" open={open} setOpen={setOpen} toast={toast}>
           {content.expertise.map((item, i) => (
             <ItemBox key={i} index={i} total={content.expertise.length}
-              onRemove={() => set({ expertise: content.expertise.filter((_, j) => j !== i) })}>
+              onRemove={() => {
+                set({ expertise: content.expertise.filter((_, j) => j !== i) });
+                flash("expertise", "Removed — click Publish to save");
+              }}>
               <Field label="Title" value={item.title} onChange={(v) => { const next = [...content.expertise]; next[i] = { ...item, title: v }; set({ expertise: next }); }} />
               <TextArea label="Description" value={item.desc} rows={2} onChange={(v) => { const next = [...content.expertise]; next[i] = { ...item, desc: v }; set({ expertise: next }); }} />
             </ItemBox>
@@ -243,7 +252,10 @@ export default function DashboardPage() {
         <Section id="projects" title="Projects" open={open} setOpen={setOpen} toast={toast}>
           {content.projects.map((item, i) => (
             <ItemBox key={i} index={i} total={content.projects.length}
-              onRemove={() => set({ projects: content.projects.filter((_, j) => j !== i) })}>
+              onRemove={() => {
+                set({ projects: content.projects.filter((_, j) => j !== i) });
+                flash("projects", "Removed — click Publish to save");
+              }}>
               <Field label="Project name" value={item.name} onChange={(v) => { const next = [...content.projects]; next[i] = { ...item, name: v }; set({ projects: next }); }} />
               <Field label="Tag / type" value={item.tag} onChange={(v) => { const next = [...content.projects]; next[i] = { ...item, tag: v }; set({ projects: next }); }} />
               <Field label="Location" value={item.loc} onChange={(v) => { const next = [...content.projects]; next[i] = { ...item, loc: v }; set({ projects: next }); }} />
@@ -257,7 +269,10 @@ export default function DashboardPage() {
         <Section id="portfolioFiles" title="Portfolio Projects (files)" open={open} setOpen={setOpen} toast={toast}>
           {content.portfolioProjects.map((item, i) => (
             <ItemBox key={item.id} index={i} total={content.portfolioProjects.length}
-              onRemove={() => set({ portfolioProjects: content.portfolioProjects.filter((_, j) => j !== i) })}>
+              onRemove={() => {
+                set({ portfolioProjects: content.portfolioProjects.filter((_, j) => j !== i) });
+                flash("portfolioFiles", "Removed — click Publish to save");
+              }}>
               <Field label="Title" value={item.title} onChange={(v) => { const next = [...content.portfolioProjects]; next[i] = { ...item, title: v }; set({ portfolioProjects: next }); }} />
               <TextArea label="Description" value={item.desc} rows={2} onChange={(v) => { const next = [...content.portfolioProjects]; next[i] = { ...item, desc: v }; set({ portfolioProjects: next }); }} />
               <label className="block font-mono text-[10px] uppercase tracking-widest mt-2 mb-1" style={{ color: "var(--text-mute)" }}>
@@ -293,7 +308,10 @@ export default function DashboardPage() {
         <Section id="experience" title="Experience Timeline" open={open} setOpen={setOpen} toast={toast}>
           {content.experience.map((item, i) => (
             <ItemBox key={i} index={i} total={content.experience.length}
-              onRemove={() => set({ experience: content.experience.filter((_, j) => j !== i) })}>
+              onRemove={() => {
+                set({ experience: content.experience.filter((_, j) => j !== i) });
+                flash("experience", "Removed — click Publish to save");
+              }}>
               <Field label="Date range" value={item.date} onChange={(v) => { const next = [...content.experience]; next[i] = { ...item, date: v }; set({ experience: next }); }} />
               <Field label="Role" value={item.role} onChange={(v) => { const next = [...content.experience]; next[i] = { ...item, role: v }; set({ experience: next }); }} />
               <Field label="Company · location" value={item.company} onChange={(v) => { const next = [...content.experience]; next[i] = { ...item, company: v }; set({ experience: next }); }} />
@@ -306,7 +324,10 @@ export default function DashboardPage() {
         <Section id="education" title="Education" open={open} setOpen={setOpen} toast={toast}>
           {content.education.map((item, i) => (
             <ItemBox key={i} index={i} total={content.education.length}
-              onRemove={() => set({ education: content.education.filter((_, j) => j !== i) })}>
+              onRemove={() => {
+                set({ education: content.education.filter((_, j) => j !== i) });
+                flash("education", "Removed — click Publish to save");
+              }}>
               <Field label="Flag (emoji)" value={item.flag} onChange={(v) => { const next = [...content.education]; next[i] = { ...item, flag: v }; set({ education: next }); }} />
               <Field label="Degree (short)" value={item.deg} onChange={(v) => { const next = [...content.education]; next[i] = { ...item, deg: v }; set({ education: next }); }} />
               <Field label="Degree (full)" value={item.sub} onChange={(v) => { const next = [...content.education]; next[i] = { ...item, sub: v }; set({ education: next }); }} />
@@ -320,7 +341,10 @@ export default function DashboardPage() {
         <Section id="tools" title="Software Tools" open={open} setOpen={setOpen} toast={toast}>
           {content.tools.map((group, i) => (
             <ItemBox key={i} index={i} total={content.tools.length}
-              onRemove={() => set({ tools: content.tools.filter((_, j) => j !== i) })}>
+              onRemove={() => {
+                set({ tools: content.tools.filter((_, j) => j !== i) });
+                flash("tools", "Removed — click Publish to save");
+              }}>
               <Field label="Group label" value={group.label} onChange={(v) => { const next = [...content.tools]; next[i] = { ...group, label: v }; set({ tools: next }); }} />
               <Field label="Tools (comma separated)" value={group.pills.join(", ")}
                 onChange={(v) => { const next = [...content.tools]; next[i] = { ...group, pills: v.split(",").map((s) => s.trim()).filter(Boolean) }; set({ tools: next }); }} />
@@ -332,7 +356,10 @@ export default function DashboardPage() {
         <Section id="milestones" title="Personal Milestones" open={open} setOpen={setOpen} toast={toast}>
           {content.milestones.map((m, i) => (
             <ItemBox key={i} index={i} total={content.milestones.length}
-              onRemove={() => set({ milestones: content.milestones.filter((_, j) => j !== i) })}>
+              onRemove={() => {
+                set({ milestones: content.milestones.filter((_, j) => j !== i) });
+                flash("milestones", "Removed — click Publish to save");
+              }}>
               <Field label="Title" value={m.title} onChange={(v) => { const next = [...content.milestones]; next[i] = { ...m, title: v }; set({ milestones: next }); }} />
               <Field label="Date" value={m.date} onChange={(v) => { const next = [...content.milestones]; next[i] = { ...m, date: v }; set({ milestones: next }); }} />
               <TextArea label="Description" value={m.desc} rows={2} onChange={(v) => { const next = [...content.milestones]; next[i] = { ...m, desc: v }; set({ milestones: next }); }} />
