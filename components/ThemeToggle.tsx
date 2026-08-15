@@ -6,9 +6,13 @@ export default function ThemeToggle() {
   const [theme, setTheme] = useState<"light" | "dark">("light");
 
   useEffect(() => {
-    const stored = localStorage.getItem("prk-theme") as "light" | "dark" | null;
-    const initial = stored || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
-    setTheme(initial);
+    // The layout's inline script already set data-theme on <html> before
+    // paint (defaulting first-time visitors to light, regardless of OS
+    // preference) — read that back as the source of truth instead of
+    // re-deriving it here, so this button can never disagree with what's
+    // actually applied.
+    const current = document.documentElement.getAttribute("data-theme") as "light" | "dark" | null;
+    setTheme(current || "light");
   }, []);
 
   function toggle() {

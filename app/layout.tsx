@@ -10,8 +10,11 @@ export const metadata: Metadata = {
 const THEME_INIT_SCRIPT = `
 (function () {
   try {
+    // First-time visitors (no stored preference) always get light mode,
+    // regardless of OS/browser dark-mode setting. Once someone uses the
+    // toggle, their explicit choice is remembered from then on.
     var stored = localStorage.getItem('prk-theme');
-    var theme = stored || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    var theme = stored || 'light';
     document.documentElement.setAttribute('data-theme', theme);
   } catch (e) {}
 })();
