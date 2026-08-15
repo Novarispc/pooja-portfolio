@@ -6,14 +6,15 @@ type Project = {
   name: string;
   role: string;
   desc: string;
+  tag: string;
+  loc: string;
   files: { name: string; url: string; type: string }[];
 };
 
 /**
  * Collapsed: name + role only. Click anywhere on that header to expand in
- * place and reveal the description and any attached files. Tag/Location
- * stay in the data (editable in admin) but are intentionally never shown
- * here, per the current design direction for this section.
+ * place and reveal, in order, the description, location, any attached
+ * files, and — last, after the attachments — the tag.
  */
 export default function ProjectCard({ project }: { project: Project }) {
   const [open, setOpen] = useState(false);
@@ -41,6 +42,11 @@ export default function ProjectCard({ project }: { project: Project }) {
           <p className="text-sm leading-relaxed pt-4" style={{ color: "var(--text-body)" }}>
             {project.desc}
           </p>
+          {project.loc && (
+            <p className="font-mono text-xs pt-3" style={{ color: "var(--text-mute)" }}>
+              {project.loc}
+            </p>
+          )}
           {project.files.length > 0 && (
             <div className="flex flex-wrap gap-2 pt-4">
               {project.files.map((f, i) => (
@@ -49,6 +55,14 @@ export default function ProjectCard({ project }: { project: Project }) {
                 </a>
               ))}
             </div>
+          )}
+          {project.tag && (
+            <span
+              className="font-mono text-[10px] uppercase tracking-wider px-2.5 py-1 inline-block mt-4 rounded"
+              style={{ background: "var(--sage-pale)", color: "var(--sage)" }}
+            >
+              {project.tag}
+            </span>
           )}
         </div>
       </div>

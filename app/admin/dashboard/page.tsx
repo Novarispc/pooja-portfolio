@@ -251,9 +251,8 @@ export default function DashboardPage() {
 
         <Section id="projects" title="Projects" open={open} setOpen={setOpen} toast={toast}>
           <p className="text-sm mb-4" style={{ color: "var(--text-mute)" }}>
-            On the public site, cards show only Name and Role until clicked — Description and
-            Files appear when expanded. Tag and Location stay here for your own reference but
-            aren&apos;t shown on the card.
+            On the public site, cards show only Name and Role until clicked. Expanding a card
+            reveals, in order: Description, Location, Files, then Tag at the very bottom.
           </p>
           {content.projects.map((item, i) => (
             <ItemBox key={i} index={i} total={content.projects.length}
@@ -264,8 +263,8 @@ export default function DashboardPage() {
               <Field label="Project name" value={item.name} onChange={(v) => { const next = [...content.projects]; next[i] = { ...item, name: v }; set({ projects: next }); }} />
               <Field label="Your role" value={item.role} onChange={(v) => { const next = [...content.projects]; next[i] = { ...item, role: v }; set({ projects: next }); }} />
               <TextArea label="Description" value={item.desc} rows={3} onChange={(v) => { const next = [...content.projects]; next[i] = { ...item, desc: v }; set({ projects: next }); }} />
-              <Field label="Tag / type (not shown on card)" value={item.tag} onChange={(v) => { const next = [...content.projects]; next[i] = { ...item, tag: v }; set({ projects: next }); }} />
-              <Field label="Location (not shown on card)" value={item.loc} onChange={(v) => { const next = [...content.projects]; next[i] = { ...item, loc: v }; set({ projects: next }); }} />
+              <Field label="Location" value={item.loc} onChange={(v) => { const next = [...content.projects]; next[i] = { ...item, loc: v }; set({ projects: next }); }} />
+              <Field label="Tag / type" value={item.tag} onChange={(v) => { const next = [...content.projects]; next[i] = { ...item, tag: v }; set({ projects: next }); }} />
               <label className="block font-mono text-[10px] uppercase tracking-widest mt-2 mb-1" style={{ color: "var(--text-mute)" }}>
                 Files ({item.files.length})
               </label>
