@@ -250,6 +250,11 @@ export default function DashboardPage() {
         </Section>
 
         <Section id="projects" title="Projects" open={open} setOpen={setOpen} toast={toast}>
+          <p className="text-sm mb-4" style={{ color: "var(--text-mute)" }}>
+            On the public site, cards show only Name and Role until clicked — Description and
+            Files appear when expanded. Tag and Location stay here for your own reference but
+            aren&apos;t shown on the card.
+          </p>
           {content.projects.map((item, i) => (
             <ItemBox key={i} index={i} total={content.projects.length}
               onRemove={() => {
@@ -257,24 +262,10 @@ export default function DashboardPage() {
                 flash("projects", "Removed — click Publish to save");
               }}>
               <Field label="Project name" value={item.name} onChange={(v) => { const next = [...content.projects]; next[i] = { ...item, name: v }; set({ projects: next }); }} />
-              <Field label="Tag / type" value={item.tag} onChange={(v) => { const next = [...content.projects]; next[i] = { ...item, tag: v }; set({ projects: next }); }} />
-              <Field label="Location" value={item.loc} onChange={(v) => { const next = [...content.projects]; next[i] = { ...item, loc: v }; set({ projects: next }); }} />
               <Field label="Your role" value={item.role} onChange={(v) => { const next = [...content.projects]; next[i] = { ...item, role: v }; set({ projects: next }); }} />
               <TextArea label="Description" value={item.desc} rows={3} onChange={(v) => { const next = [...content.projects]; next[i] = { ...item, desc: v }; set({ projects: next }); }} />
-            </ItemBox>
-          ))}
-          <AddButton onClick={() => set({ projects: [...content.projects, { name: "", tag: "", loc: "", role: "", desc: "" }] })}>+ Add project</AddButton>
-        </Section>
-
-        <Section id="portfolioFiles" title="Portfolio Projects (files)" open={open} setOpen={setOpen} toast={toast}>
-          {content.portfolioProjects.map((item, i) => (
-            <ItemBox key={item.id} index={i} total={content.portfolioProjects.length}
-              onRemove={() => {
-                set({ portfolioProjects: content.portfolioProjects.filter((_, j) => j !== i) });
-                flash("portfolioFiles", "Removed — click Publish to save");
-              }}>
-              <Field label="Title" value={item.title} onChange={(v) => { const next = [...content.portfolioProjects]; next[i] = { ...item, title: v }; set({ portfolioProjects: next }); }} />
-              <TextArea label="Description" value={item.desc} rows={2} onChange={(v) => { const next = [...content.portfolioProjects]; next[i] = { ...item, desc: v }; set({ portfolioProjects: next }); }} />
+              <Field label="Tag / type (not shown on card)" value={item.tag} onChange={(v) => { const next = [...content.projects]; next[i] = { ...item, tag: v }; set({ projects: next }); }} />
+              <Field label="Location (not shown on card)" value={item.loc} onChange={(v) => { const next = [...content.projects]; next[i] = { ...item, loc: v }; set({ projects: next }); }} />
               <label className="block font-mono text-[10px] uppercase tracking-widest mt-2 mb-1" style={{ color: "var(--text-mute)" }}>
                 Files ({item.files.length})
               </label>
@@ -284,8 +275,8 @@ export default function DashboardPage() {
                     {f.name}
                     <button className="opacity-60 hover:opacity-100" onClick={() => {
                       const nextFiles = item.files.filter((_, j) => j !== fi);
-                      const next = [...content.portfolioProjects]; next[i] = { ...item, files: nextFiles };
-                      set({ portfolioProjects: next });
+                      const next = [...content.projects]; next[i] = { ...item, files: nextFiles };
+                      set({ projects: next });
                     }}>×</button>
                   </span>
                 ))}
@@ -293,16 +284,14 @@ export default function DashboardPage() {
               <input type="file" multiple onChange={async (e) => {
                 const files = Array.from(e.target.files || []);
                 const uploaded = await Promise.all(files.map(uploadFile));
-                const next = [...content.portfolioProjects];
+                const next = [...content.projects];
                 next[i] = { ...item, files: [...item.files, ...uploaded] };
-                set({ portfolioProjects: next });
-                flash("portfolioFiles", "Files uploaded ✓");
+                set({ projects: next });
+                flash("projects", "Files uploaded ✓");
               }} />
             </ItemBox>
           ))}
-          <AddButton onClick={() => set({ portfolioProjects: [...content.portfolioProjects, { id: "pf-" + Date.now(), title: "New Project", desc: "", files: [] }] })}>
-            + Add Project
-          </AddButton>
+          <AddButton onClick={() => set({ projects: [...content.projects, { name: "", tag: "", loc: "", role: "", desc: "", files: [] }] })}>+ Add project</AddButton>
         </Section>
 
         <Section id="experience" title="Experience Timeline" open={open} setOpen={setOpen} toast={toast}>

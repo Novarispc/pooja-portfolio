@@ -19,7 +19,14 @@ export type SiteContent = {
   };
   about: { title: string; quote: string; paragraphs: string[] };
   expertise: { title: string; desc: string }[];
-  projects: { name: string; tag: string; loc: string; role: string; desc: string }[];
+  projects: {
+    name: string;
+    tag: string;
+    loc: string;
+    role: string;
+    desc: string;
+    files: { name: string; url: string; type: string }[];
+  }[];
   experience: { date: string; role: string; company: string; desc: string }[];
   education: { flag: string; deg: string; sub: string; inst: string; meta: string }[];
   tools: { label: string; pills: string[] }[];
@@ -37,7 +44,6 @@ export type SiteContent = {
   };
   footer: { copyright: string };
   milestones: { title: string; date: string; desc: string; img: string | null }[];
-  portfolioProjects: { id: string; title: string; desc: string; files: { name: string; url: string; type: string }[] }[];
   avatarUrl: string | null;
   headerTextColor?: string;
   footerTextColor?: string;

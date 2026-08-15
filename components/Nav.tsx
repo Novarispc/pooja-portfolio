@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import ThemeToggle from "./ThemeToggle";
 
-const LINKS = ["about", "expertise", "projects", "portfolio", "experience", "education", "milestones", "contact"];
+const LINKS = ["about", "expertise", "projects", "experience", "education", "milestones", "contact"];
 
 export default function Nav({ avatarUrl, textColor }: { avatarUrl: string | null; textColor?: string }) {
   const [scrolled, setScrolled] = useState(false);

@@ -277,25 +277,55 @@ section[id] {
   box-shadow: 0 20px 44px rgba(var(--shadow-tint), 0.12), 0 6px 16px rgba(var(--shadow-tint), 0.08);
 }
 
-/* Portfolio cards get their own clay accent so they read distinctly from Projects (sage-topped) */
-.card-portfolio {
-  border-top: 2.5px solid var(--clay);
-}
-.card-portfolio:hover {
-  border-color: var(--clay);
-  border-top-color: var(--clay);
-  background: color-mix(in srgb, var(--clay) 6%, var(--bg-raised));
-}
-
 /* Projects section sits on --bg-card, so its cards flip back to --bg for contrast */
 .card-projects {
   background: var(--bg);
   border-top: 2.5px solid var(--sage);
 }
 .card-projects:hover {
-  background: var(--sage-pale);
+  background: linear-gradient(160deg, var(--sage-pale), var(--bg-raised));
   border-color: var(--sage);
   border-top-color: var(--sage);
+}
+
+/* Project cards (combined Projects + Portfolio): click header to expand in
+   place — grid-template-rows 0fr -> 1fr animates height without needing a
+   guessed max-height, correct for any amount of description/file content. */
+.project-card button {
+  cursor: pointer;
+}
+.project-card-chevron {
+  color: var(--text-mute);
+  transition: transform 0.4s var(--ease), color 0.3s ease;
+}
+.project-card button[aria-expanded="true"] .project-card-chevron {
+  transform: rotate(180deg);
+  color: var(--sage);
+}
+.project-card-detail {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows 0.45s var(--ease);
+}
+.project-card-detail.is-open {
+  grid-template-rows: 1fr;
+}
+.project-card-detail-inner {
+  overflow: hidden;
+}
+.project-card-detail-inner > * {
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.project-card-detail.is-open .project-card-detail-inner > * {
+  opacity: 1;
+  transition-delay: 0.15s;
+}
+/* Open state reads as a subtly "selected" card even before hovering it again */
+.project-card[data-state="open"] {
+  border-color: var(--sage);
+  border-top-color: var(--sage);
+  background: var(--sage-pale);
 }
 
 /* Milestone cards get a sage-mid left accent */
@@ -396,11 +426,6 @@ section[id] {
   border-color: var(--clay);
   color: #fff;
   transform: translateY(-2px);
-}
-
-/* Project tag badge */
-.tag-badge {
-  transition: background 0.3s ease, color 0.3s ease;
 }
 
 /* Nav ----------------------------------------------------------------------- */

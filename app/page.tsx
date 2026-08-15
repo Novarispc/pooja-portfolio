@@ -2,6 +2,7 @@ import { readContent } from "@/lib/content";
 import Nav from "@/components/Nav";
 import Reveal from "@/components/Reveal";
 import HeroScene from "@/components/HeroScene";
+import ProjectCard from "@/components/ProjectCard";
 
 export const dynamic = "force-dynamic";
 
@@ -148,92 +149,20 @@ export default async function HomePage() {
         </div>
       </Reveal>
 
-      {/* PROJECTS */}
+      {/* PROJECTS — combined Projects + Portfolio: click a card to expand its
+          description and any attached files */}
       <Reveal as="section" id="projects" className="section relative px-6 sm:px-8" style={{ background: "var(--bg-card)" }}>
         <span className="section-edge" />
         <div className="max-w-6xl mx-auto">
-          <span className="eyebrow mb-5 block">Projects</span>
+          <span className="eyebrow mb-5 block">My Portfolio</span>
           <h2 className="font-display italic h-section mb-12" style={{ color: "var(--text-head)" }}>
-            Selected work
+            Projects
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
             {c.projects.map((p, i) => (
-              <div key={i} className="card card-projects p-6 flex flex-col">
-                <span
-                  className="tag-badge font-mono text-[10px] uppercase tracking-wider px-2.5 py-1 inline-block mb-4 rounded self-start"
-                  style={{ background: "var(--sage-pale)", color: "var(--sage)" }}
-                >
-                  {p.tag}
-                </span>
-                <h3 className="font-display italic text-lg mb-1.5" style={{ color: "var(--text-head)" }}>
-                  {p.name}
-                </h3>
-                <p className="font-mono text-xs mb-2.5" style={{ color: "var(--text-mute)" }}>
-                  {p.loc}
-                </p>
-                <p className="text-xs uppercase tracking-wider mb-3" style={{ color: "var(--clay)" }}>
-                  {p.role}
-                </p>
-                <p className="text-sm leading-relaxed" style={{ color: "var(--text-body)" }}>
-                  {p.desc}
-                </p>
-              </div>
+              <ProjectCard key={i} project={p} />
             ))}
           </div>
-        </div>
-      </Reveal>
-
-      {/* MY PORTFOLIO — title, description, and file uploads per project */}
-      <Reveal as="section" id="portfolio" className="section px-6 sm:px-8">
-        <div className="max-w-6xl mx-auto">
-          <span className="eyebrow mb-5 block">Portfolio</span>
-          <h2 className="font-display italic h-section mb-4" style={{ color: "var(--text-head)" }}>
-            My Portfolio
-          </h2>
-          <p className="max-w-xl mb-12 text-sm leading-relaxed" style={{ color: "var(--text-mute)" }}>
-            Supporting drawings, reports, photographs and documents for individual projects.
-          </p>
-          {c.portfolioProjects.length === 0 ? (
-            <p className="text-sm italic" style={{ color: "var(--text-mute)" }}>
-              No portfolio projects added yet.
-            </p>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {c.portfolioProjects.map((p) => (
-                <div key={p.id} className="card card-portfolio p-6 flex flex-col">
-                  <div className="flex items-start justify-between gap-3 mb-2.5">
-                    <h3 className="font-display italic text-lg" style={{ color: "var(--text-head)" }}>
-                      {p.title}
-                    </h3>
-                    <span
-                      className="font-mono text-[10px] uppercase tracking-wider px-2.5 py-1 rounded-full flex-shrink-0"
-                      style={{ background: "var(--clay)", color: "#fff" }}
-                    >
-                      {p.files.length} file{p.files.length !== 1 ? "s" : ""}
-                    </span>
-                  </div>
-                  {p.desc && (
-                    <p className="text-sm mb-4 leading-relaxed" style={{ color: "var(--text-mute)" }}>
-                      {p.desc}
-                    </p>
-                  )}
-                  {p.files.length === 0 ? (
-                    <p className="font-mono text-[10px] uppercase tracking-wider mt-auto" style={{ color: "var(--text-mute)" }}>
-                      No files yet
-                    </p>
-                  ) : (
-                    <div className="flex flex-wrap gap-2 mt-auto pt-1">
-                      {p.files.map((f, i) => (
-                        <a key={i} href={f.url} target="_blank" rel="noopener noreferrer" className="file-pill font-mono text-[10px] uppercase px-3 py-1.5">
-                          {f.name}
-                        </a>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
-          )}
         </div>
       </Reveal>
 

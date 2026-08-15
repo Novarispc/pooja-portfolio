@@ -32,14 +32,14 @@
     { "title": "Planning Documentation", "desc": "Landscape statements, design & access statements, and expert planning narrative." }
   ],
   "projects": [
-    { "name": "Cambridge Road, Sawbridgeworth", "tag": "LEMP & LEAP", "loc": "Sawbridgeworth, Hertfordshire", "role": "Landscape Proposal", "desc": "Prepared a Landscape and Ecology Management Plan and LEAP, establishing long-term habitat management objectives and biodiversity commitments for a residential site." },
-    { "name": "Chesterfield Road, Calow", "tag": "Landscape Masterplan", "loc": "Calow, Derbyshire", "role": "Masterplan Design", "desc": "Landscape masterplan integrating green corridors, structured planting, and quality public open space into the wider development framework." },
-    { "name": "Manor Caravan Park", "tag": "Landscape Masterplan", "loc": "United Kingdom", "role": "Masterplan Design", "desc": "Masterplan providing landscape strategy, boundary planting, and site layout enhancements to improve visual setting and ecological connectivity." },
-    { "name": "Wolsey Grange Phase 2", "tag": "Strategic Masterplan", "loc": "United Kingdom", "role": "Strategic Landscape Masterplan", "desc": "Strategic landscape masterplan for a significant residential phase, including structural planting, green infrastructure delivery, and phasing strategy." },
-    { "name": "Evolution Business Park, Impington", "tag": "LVIA", "loc": "Impington, Cambridgeshire", "role": "LVIA Contribution", "desc": "Contributed to the Landscape and Visual Impact Assessment for a commercial expansion, including baseline analysis, viewpoint survey, and significance appraisal." },
-    { "name": "Oakley Solar Farm", "tag": "Renewable Energy", "loc": "Oakley, United Kingdom", "role": "Detailed Landscape Scheme", "desc": "Detailed landscape scheme for a utility-scale solar farm, encompassing perimeter planting, grassland management, and visual mitigation." },
-    { "name": "University of Hull", "tag": "Public Art & Landscape", "loc": "Hull, East Yorkshire", "role": "Public Art Design", "desc": "Design contribution to a public art installation within the campus landscape, coordinating artistic intent with setting, context, and pedestrian movement." },
-    { "name": "Birkenshaw Fire Services HQ", "tag": "Infrastructure", "loc": "Birkenshaw, West Yorkshire", "role": "Site Landscape Support", "desc": "Landscape support for a new headquarters building: external works design, hard and soft landscape proposals, and coordination with the project team." }
+    { "name": "Cambridge Road, Sawbridgeworth", "tag": "LEMP & LEAP", "loc": "Sawbridgeworth, Hertfordshire", "role": "Landscape Proposal", "desc": "Prepared a Landscape and Ecology Management Plan and LEAP, establishing long-term habitat management objectives and biodiversity commitments for a residential site.", "files": [] },
+    { "name": "Chesterfield Road, Calow", "tag": "Landscape Masterplan", "loc": "Calow, Derbyshire", "role": "Masterplan Design", "desc": "Landscape masterplan integrating green corridors, structured planting, and quality public open space into the wider development framework.", "files": [] },
+    { "name": "Manor Caravan Park", "tag": "Landscape Masterplan", "loc": "United Kingdom", "role": "Masterplan Design", "desc": "Masterplan providing landscape strategy, boundary planting, and site layout enhancements to improve visual setting and ecological connectivity.", "files": [] },
+    { "name": "Wolsey Grange Phase 2", "tag": "Strategic Masterplan", "loc": "United Kingdom", "role": "Strategic Landscape Masterplan", "desc": "Strategic landscape masterplan for a significant residential phase, including structural planting, green infrastructure delivery, and phasing strategy.", "files": [] },
+    { "name": "Evolution Business Park, Impington", "tag": "LVIA", "loc": "Impington, Cambridgeshire", "role": "LVIA Contribution", "desc": "Contributed to the Landscape and Visual Impact Assessment for a commercial expansion, including baseline analysis, viewpoint survey, and significance appraisal.", "files": [] },
+    { "name": "Oakley Solar Farm", "tag": "Renewable Energy", "loc": "Oakley, United Kingdom", "role": "Detailed Landscape Scheme", "desc": "Detailed landscape scheme for a utility-scale solar farm, encompassing perimeter planting, grassland management, and visual mitigation.", "files": [] },
+    { "name": "University of Hull", "tag": "Public Art & Landscape", "loc": "Hull, East Yorkshire", "role": "Public Art Design", "desc": "Design contribution to a public art installation within the campus landscape, coordinating artistic intent with setting, context, and pedestrian movement.", "files": [] },
+    { "name": "Birkenshaw Fire Services HQ", "tag": "Infrastructure", "loc": "Birkenshaw, West Yorkshire", "role": "Site Landscape Support", "desc": "Landscape support for a new headquarters building: external works design, hard and soft landscape proposals, and coordination with the project team.", "files": [] }
   ],
   "experience": [
     { "date": "March 2025 — Present", "role": "Landscape Architect", "company": "Pegasus Group Ltd · Cambridge, UK", "desc": "Working within the landscape planning team on a varied caseload of residential, commercial, and renewable energy projects. Responsibilities include LVIA preparation, landscape masterplanning, planting design, and planning condition discharge." },
@@ -71,7 +71,6 @@
   },
   "footer": { "copyright": "© 2026 Pooja Raviendran Kutty · Cambridge, UK" },
   "milestones": [],
-  "portfolioProjects": [],
   "avatarUrl": null,
   "headerTextColor": "",
   "footerTextColor": "",
