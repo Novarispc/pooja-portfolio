@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { uploadFile } from "@/lib/supabase";
+import { uploadFile, deleteFile, pathFromPublicUrl } from "@/lib/supabase";
 
 const MAX_BYTES = 15 * 1024 * 1024; // 15MB
 
@@ -30,4 +30,22 @@ export async function POST(req: NextRequest) {
     name: result.name,
     type: file.type || "application/octet-stream",
   });
+}
+
+/** Admin-only: deletes a previously uploaded file. Body: { url: string }. Safe to call even if the file is already gone. */
+export async function DELETE(req: NextRequest) {
+  const body = await req.json().catch(() => null);
+  const url = body?.url as string | undefined;
+  if (!url) {
+    return NextResponse.json({ error: "No url provided" }, { status: 400 });
+  }
+
+  const path = pathFromPublicUrl(url);
+  if (!path) {
+    // Not a file from our bucket — nothing to clean up, not an error.
+    return NextResponse.json({ ok: true, skipped: true });
+  }
+
+  const ok = await deleteFile(path);
+  return NextResponse.json({ ok });
 }

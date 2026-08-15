@@ -9,6 +9,15 @@ type Toast = { section: string; msg: string } | null;
 export default function DashboardPage() {
   const router = useRouter();
   const [content, setContent] = useState<SiteContent | null>(null);
+  // The live published document's own updatedAt — tracked separately from
+  // content.meta.updatedAt (which reflects whichever of draft/published was
+  // actually loaded). Publishing conflict-checks against this; Save Draft
+  // conflict-checks against content.meta.updatedAt instead. The two are
+  // never the same value once a draft exists, so they can't be conflated.
+  const [publishedUpdatedAt, setPublishedUpdatedAt] = useState<string | null>(null);
+  // JSON snapshot of content exactly as last loaded/saved — comparing
+  // against this is how we know there are unsaved edits.
+  const [savedSnapshot, setSavedSnapshot] = useState<string>("");
   const [activeTab, setActiveTab] = useState<"content" | "theme">("content");
   const [open, setOpen] = useState<string>("hero");
   const [toast, setToast] = useState<Toast>(null);
@@ -18,8 +27,26 @@ export default function DashboardPage() {
   useEffect(() => {
     fetch("/api/content")
       .then((r) => r.json())
-      .then(setContent);
+      .then((data) => {
+        const { _publishedUpdatedAt, ...rest } = data;
+        setContent(rest);
+        setPublishedUpdatedAt(_publishedUpdatedAt ?? null);
+        setSavedSnapshot(JSON.stringify(rest));
+      });
   }, []);
+
+  // Warn before closing/navigating away with unsaved edits. Native browser
+  // dialog — no custom UI.
+  useEffect(() => {
+    function handler(e: BeforeUnloadEvent) {
+      if (content && JSON.stringify(content) !== savedSnapshot) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    }
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [content, savedSnapshot]);
 
   function flash(section: string, msg = "Saved ✓") {
     setToast({ section, msg });
@@ -29,16 +56,21 @@ export default function DashboardPage() {
   async function save(publish = true) {
     if (!content) return;
     setSaving(true);
+    const expectedUpdatedAt = publish ? publishedUpdatedAt ?? undefined : content.meta?.updatedAt;
     const res = await fetch("/api/content", {
       method: "PUT",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ content, publish }),
+      body: JSON.stringify({ content, publish, expectedUpdatedAt }),
     });
     setSaving(false);
     if (res.ok) {
       const saved = await res.json();
       setContent(saved);
+      setSavedSnapshot(JSON.stringify(saved));
+      if (publish) setPublishedUpdatedAt(saved.meta.updatedAt);
       flash(open, publish ? "Published ✓" : "Draft saved ✓");
+    } else if (res.status === 409) {
+      flash(open, "Changed elsewhere — reload the page before saving");
     } else {
       flash(open, "Save failed");
     }
@@ -55,6 +87,20 @@ export default function DashboardPage() {
     const res = await fetch("/api/upload", { method: "POST", body: form });
     if (!res.ok) throw new Error("Upload failed");
     return res.json();
+  }
+
+  /** Deletes a previously uploaded file from storage. Best-effort — never blocks the calling remove/replace action. */
+  async function removeFile(url: string | null | undefined) {
+    if (!url) return;
+    try {
+      await fetch("/api/upload", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url }),
+      });
+    } catch {
+      /* non-critical cleanup — ignore */
+    }
   }
 
   async function loadHistory() {
@@ -91,10 +137,13 @@ export default function DashboardPage() {
         body: JSON.stringify(parsed),
       });
       if (res.ok) {
-        setContent(await res.json());
-        flash("data", "Imported ✓");
+        const saved = await res.json();
+        setContent(saved);
+        setSavedSnapshot(JSON.stringify(saved));
+        flash("data", "Imported as draft ✓ — review, then Publish");
       } else {
-        flash("data", "Import failed");
+        const err = await res.json().catch(() => ({}));
+        flash("data", err.error || "Import failed");
       }
     } catch {
       flash("data", "Invalid JSON file");
@@ -189,6 +238,7 @@ export default function DashboardPage() {
           {content.about.paragraphs.map((p, i) => (
             <ItemBox key={i} index={i} total={content.about.paragraphs.length}
               onRemove={() => {
+                if (!confirm("Remove this paragraph?")) return;
                 set({ about: { ...content.about, paragraphs: content.about.paragraphs.filter((_, j) => j !== i) } });
                 flash("about", "Removed — click Publish to save");
               }}>
@@ -218,15 +268,19 @@ export default function DashboardPage() {
               onChange={async (e) => {
                 const file = e.target.files?.[0];
                 if (!file) return;
+                const previousUrl = content.avatarUrl;
                 const uploaded = await uploadFile(file);
                 set({ avatarUrl: uploaded.url });
                 flash("avatar", "Photo uploaded — Publish to go live");
+                removeFile(previousUrl); // replaced — clean up the old one
               }}
             />
           </div>
           {content.avatarUrl && (
             <button className="font-mono text-[10px] uppercase tracking-wider" style={{ color: "var(--clay)" }}
               onClick={() => {
+                if (!confirm("Remove profile photo?")) return;
+                removeFile(content.avatarUrl);
                 set({ avatarUrl: null });
                 flash("avatar", "Removed — click Publish to save");
               }}>
@@ -239,6 +293,7 @@ export default function DashboardPage() {
           {content.expertise.map((item, i) => (
             <ItemBox key={i} index={i} total={content.expertise.length}
               onRemove={() => {
+                if (!confirm("Remove this expertise card?")) return;
                 set({ expertise: content.expertise.filter((_, j) => j !== i) });
                 flash("expertise", "Removed — click Publish to save");
               }}>
@@ -257,6 +312,8 @@ export default function DashboardPage() {
           {content.projects.map((item, i) => (
             <ItemBox key={i} index={i} total={content.projects.length}
               onRemove={() => {
+                if (!confirm(`Remove "${item.name || "this project"}"? This also deletes its ${item.files.length} attached file${item.files.length === 1 ? "" : "s"}.`)) return;
+                item.files.forEach((f) => removeFile(f.url));
                 set({ projects: content.projects.filter((_, j) => j !== i) });
                 flash("projects", "Removed — click Publish to save");
               }}>
@@ -273,6 +330,7 @@ export default function DashboardPage() {
                   <span key={fi} className="text-xs px-2 py-1 border rounded flex items-center gap-1" style={{ borderColor: "var(--border)" }}>
                     {f.name}
                     <button className="opacity-60 hover:opacity-100" onClick={() => {
+                      removeFile(f.url);
                       const nextFiles = item.files.filter((_, j) => j !== fi);
                       const next = [...content.projects]; next[i] = { ...item, files: nextFiles };
                       set({ projects: next });
@@ -297,6 +355,7 @@ export default function DashboardPage() {
           {content.experience.map((item, i) => (
             <ItemBox key={i} index={i} total={content.experience.length}
               onRemove={() => {
+                if (!confirm("Remove this role?")) return;
                 set({ experience: content.experience.filter((_, j) => j !== i) });
                 flash("experience", "Removed — click Publish to save");
               }}>
@@ -313,6 +372,7 @@ export default function DashboardPage() {
           {content.education.map((item, i) => (
             <ItemBox key={i} index={i} total={content.education.length}
               onRemove={() => {
+                if (!confirm("Remove this education entry?")) return;
                 set({ education: content.education.filter((_, j) => j !== i) });
                 flash("education", "Removed — click Publish to save");
               }}>
@@ -330,6 +390,7 @@ export default function DashboardPage() {
           {content.tools.map((group, i) => (
             <ItemBox key={i} index={i} total={content.tools.length}
               onRemove={() => {
+                if (!confirm("Remove this tool group?")) return;
                 set({ tools: content.tools.filter((_, j) => j !== i) });
                 flash("tools", "Removed — click Publish to save");
               }}>
@@ -345,6 +406,8 @@ export default function DashboardPage() {
           {content.milestones.map((m, i) => (
             <ItemBox key={i} index={i} total={content.milestones.length}
               onRemove={() => {
+                if (!confirm(`Remove "${m.title || "this milestone"}"?${m.img ? " This also deletes its photo." : ""}`)) return;
+                removeFile(m.img);
                 set({ milestones: content.milestones.filter((_, j) => j !== i) });
                 flash("milestones", "Removed — click Publish to save");
               }}>
@@ -353,9 +416,11 @@ export default function DashboardPage() {
               <TextArea label="Description" value={m.desc} rows={2} onChange={(v) => { const next = [...content.milestones]; next[i] = { ...m, desc: v }; set({ milestones: next }); }} />
               <input type="file" accept="image/*" onChange={async (e) => {
                 const file = e.target.files?.[0]; if (!file) return;
+                const previousImg = m.img;
                 const uploaded = await uploadFile(file);
                 const next = [...content.milestones]; next[i] = { ...m, img: uploaded.url };
                 set({ milestones: next });
+                removeFile(previousImg); // replaced — clean up the old one
               }} />
             </ItemBox>
           ))}

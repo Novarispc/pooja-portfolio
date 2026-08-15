@@ -1,61 +1,26 @@
 import { supabaseAdmin } from "./supabaseAdmin";
+import { normalizeContent } from "./schema";
+export type { SiteContent } from "./schema";
+import type { SiteContent } from "./schema";
 
 const BUCKET = "site-data";
-const CONTENT_KEY = "content.json";
+const CONTENT_KEY = "content.json"; // published — what the public site reads
+const DRAFT_KEY = "draft.json"; // in-progress admin edits, never read by the public site
 const HISTORY_PREFIX = "history";
 const MAX_SNAPSHOTS = 30;
 
-export type SiteContent = {
-  hero: {
-    coord: string;
-    name: string;
-    role: string;
-    tagline: string;
-    intro: string;
-    colorPrimaryLight?: string;
-    colorSecondaryLight?: string;
-    colorPrimaryDark?: string;
-    colorSecondaryDark?: string;
-  };
-  about: { title: string; quote: string; paragraphs: string[] };
-  expertise: { title: string; desc: string }[];
-  projects: {
-    name: string;
-    tag: string;
-    loc: string;
-    role: string;
-    desc: string;
-    files: { name: string; url: string; type: string }[];
-  }[];
-  experience: { date: string; role: string; company: string; desc: string }[];
-  education: { flag: string; deg: string; sub: string; inst: string; meta: string }[];
-  tools: { label: string; pills: string[] }[];
-  contact: {
-    title: string;
-    intro: string;
-    email: string;
-    linkedinUrl: string;
-    linkedinName: string;
-    location: string;
-    colorPrimaryLight?: string;
-    colorSecondaryLight?: string;
-    colorPrimaryDark?: string;
-    colorSecondaryDark?: string;
-  };
-  footer: { copyright: string };
-  milestones: { title: string; date: string; desc: string; img: string | null }[];
-  avatarUrl: string | null;
-  headerTextColor?: string;
-  footerTextColor?: string;
-  meta: { updatedAt: string; status: "draft" | "published" };
-};
-
 /**
- * Content is stored as a single JSON object in Supabase Storage (private
- * bucket, service-role access only) rather than the local filesystem —
- * Vercel's serverless functions run on a read-only filesystem, so writes
- * there never persist. Storage-backed reads/writes work identically on
- * localhost and on Vercel.
+ * Content lives in Supabase Storage (private bucket, service-role access
+ * only) rather than the local filesystem — Vercel's serverless functions
+ * run on a read-only filesystem, so writes there never persist.
+ *
+ * Published and draft are two separate objects. The public site only ever
+ * reads content.json; the admin dashboard reads draft.json if one exists,
+ * falling back to the live published content otherwise. "Save Draft"
+ * writes only to draft.json — it never touches what visitors see. "Publish"
+ * writes to content.json (archiving the previous version to history first)
+ * and then clears draft.json, since it's now redundant with what just went
+ * live.
  */
 
 /**
@@ -93,28 +58,85 @@ async function uploadJson(path: string, value: unknown) {
   if (error) throw error;
 }
 
+async function removeIfExists(path: string) {
+  try {
+    await supabaseAdmin.storage.from(BUCKET).remove([path]);
+  } catch {
+    /* non-critical cleanup — ignore */
+  }
+}
+
+/** Published content only — what the public site (and /api/content/public) reads. */
 export async function readContent(): Promise<SiteContent> {
-  const existing = await downloadJson<SiteContent>(CONTENT_KEY);
-  if (existing) return existing;
+  const raw = await downloadJson<unknown>(CONTENT_KEY);
+  const normalized = raw ? normalizeContent(raw) : null;
+  if (normalized) return normalized;
   const seed = await import("../data/seed.json");
   return seed.default as SiteContent;
 }
 
-export async function writeContent(content: SiteContent, opts: { publish: boolean }) {
-  // Archive the previous version before overwriting
-  const prev = await downloadJson<SiteContent>(CONTENT_KEY);
-  if (prev) {
-    const stamp = new Date().toISOString().replace(/[:.]/g, "-");
-    await uploadJson(`${HISTORY_PREFIX}/${stamp}.json`, prev);
-    await pruneHistory();
+/**
+ * Draft-in-progress if one exists, otherwise falls back to the live
+ * published content. Admin dashboard only. Also returns the published
+ * document's own updatedAt separately — even while viewing a draft — so
+ * the client can detect a stale Publish (comparing against content.json)
+ * independently of a stale Save Draft (comparing against draft.json).
+ * Conflating the two would false-positive every time: a draft's timestamp
+ * and the published document's timestamp are never the same value.
+ */
+export async function readEditableContent(): Promise<{ content: SiteContent; publishedUpdatedAt: string | null }> {
+  const publishedRaw = await downloadJson<unknown>(CONTENT_KEY);
+  const publishedNormalized = publishedRaw ? normalizeContent(publishedRaw) : null;
+
+  const draftRaw = await downloadJson<unknown>(DRAFT_KEY);
+  const draftNormalized = draftRaw ? normalizeContent(draftRaw) : null;
+  if (draftNormalized) {
+    return { content: draftNormalized, publishedUpdatedAt: publishedNormalized?.meta?.updatedAt ?? null };
+  }
+
+  const published = publishedNormalized ?? (await readContent());
+  return { content: published, publishedUpdatedAt: published.meta?.updatedAt ?? null };
+}
+
+type WriteResult = { ok: true; content: SiteContent } | { ok: false; reason: "conflict" };
+
+export async function writeContent(
+  content: SiteContent,
+  opts: { publish: boolean; expectedUpdatedAt?: string }
+): Promise<WriteResult> {
+  const targetKey = opts.publish ? CONTENT_KEY : DRAFT_KEY;
+  const current = await downloadJson<SiteContent>(targetKey);
+
+  // Concurrency check: if the caller's copy is stale relative to what's
+  // actually stored at the target key, refuse the overwrite rather than
+  // silently clobbering whatever changed in between.
+  if (opts.expectedUpdatedAt && current?.meta?.updatedAt && current.meta.updatedAt !== opts.expectedUpdatedAt) {
+    return { ok: false, reason: "conflict" };
+  }
+
+  if (opts.publish) {
+    // Archive the previous published version before overwriting it.
+    const prevPublished = await downloadJson<SiteContent>(CONTENT_KEY);
+    if (prevPublished) {
+      const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+      await uploadJson(`${HISTORY_PREFIX}/${stamp}.json`, prevPublished);
+      await pruneHistory();
+    }
   }
 
   const next: SiteContent = {
     ...content,
     meta: { updatedAt: new Date().toISOString(), status: opts.publish ? "published" : "draft" },
   };
-  await uploadJson(CONTENT_KEY, next);
-  return next;
+  await uploadJson(targetKey, next);
+
+  // Publishing supersedes whatever draft was in progress — clear it so the
+  // next admin load reads the freshly-published content, not a stale draft.
+  if (opts.publish) {
+    await removeIfExists(DRAFT_KEY);
+  }
+
+  return { ok: true, content: next };
 }
 
 async function pruneHistory() {
@@ -139,7 +161,8 @@ export async function listHistory() {
 
 export async function readHistorySnapshot(filename: string) {
   const safe = filename.replace(/[/\\]/g, ""); // prevent path traversal
-  const snapshot = await downloadJson<SiteContent>(`${HISTORY_PREFIX}/${safe}`);
-  if (!snapshot) throw new Error("Snapshot not found");
-  return snapshot;
+  const raw = await downloadJson<unknown>(`${HISTORY_PREFIX}/${safe}`);
+  const normalized = raw ? normalizeContent(raw) : null;
+  if (!normalized) throw new Error("Snapshot not found or unreadable");
+  return normalized;
 }

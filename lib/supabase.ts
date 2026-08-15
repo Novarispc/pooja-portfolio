@@ -1,4 +1,5 @@
 import { createClient } from "@supabase/supabase-js";
+import { supabaseAdmin } from "./supabaseAdmin";
 
 const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
@@ -10,6 +11,8 @@ if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
 }
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const BUCKET = "portfolio-files";
 
 /**
  * Upload a file to Supabase Storage (portfolio-files bucket).
@@ -25,7 +28,7 @@ export async function uploadFile(
     const filePath = `${folder}/${safeName}`;
 
     const { data, error } = await supabase.storage
-      .from("portfolio-files")
+      .from(BUCKET)
       .upload(filePath, file, {
         cacheControl: "3600",
         upsert: false,
@@ -39,7 +42,7 @@ export async function uploadFile(
     // Get public URL
     const {
       data: { publicUrl },
-    } = supabase.storage.from("portfolio-files").getPublicUrl(data.path);
+    } = supabase.storage.from(BUCKET).getPublicUrl(data.path);
 
     return { url: publicUrl, name: file.name };
   } catch (err) {
@@ -49,19 +52,31 @@ export async function uploadFile(
 }
 
 /**
- * Delete a file from Supabase Storage.
+ * Extracts the storage path from a public URL previously returned by
+ * uploadFile, e.g. ".../object/public/portfolio-files/general/123-x.pdf"
+ * -> "general/123-x.pdf". Returns null if the URL isn't from this bucket
+ * (nothing to delete).
  */
-export async function deleteFile(filePath: string): Promise<boolean> {
-  try {
-    const { error } = await supabase.storage
-      .from("portfolio-files")
-      .remove([filePath]);
+export function pathFromPublicUrl(url: string): string | null {
+  const marker = `/object/public/${BUCKET}/`;
+  const idx = url.indexOf(marker);
+  if (idx === -1) return null;
+  const path = url.slice(idx + marker.length).split("?")[0];
+  return path ? decodeURIComponent(path) : null;
+}
 
+/**
+ * Delete a file from Supabase Storage. Uses the service-role client (not
+ * the anon key) so this works regardless of bucket RLS policies — deletion
+ * only ever happens from admin-gated server routes.
+ */
+export async function deleteFile(path: string): Promise<boolean> {
+  try {
+    const { error } = await supabaseAdmin.storage.from(BUCKET).remove([path]);
     if (error) {
       console.error("Supabase delete error:", error);
       return false;
     }
-
     return true;
   } catch (err) {
     console.error("Delete exception:", err);

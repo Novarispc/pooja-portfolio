@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { readContent } from "@/lib/content";
 import Nav from "@/components/Nav";
 import Reveal from "@/components/Reveal";
@@ -86,18 +87,22 @@ export default async function HomePage() {
           <div className={c.avatarUrl ? "grid grid-cols-1 md:grid-cols-3 gap-10 md:gap-12 items-start" : ""}>
             {c.avatarUrl && (
               <div className="md:col-span-1">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={c.avatarUrl}
-                  alt="Pooja Raviendran Kutty"
-                  className="w-full max-w-xs rounded-lg"
+                <div
+                  className="relative w-full max-w-xs rounded-lg overflow-hidden"
                   style={{
-                    border: "1px solid var(--border)",
                     aspectRatio: "3/4",
-                    objectFit: "cover",
+                    border: "1px solid var(--border)",
                     boxShadow: "0 20px 44px rgba(var(--shadow-tint), 0.16)",
                   }}
-                />
+                >
+                  <Image
+                    src={c.avatarUrl}
+                    alt="Pooja Raviendran Kutty"
+                    fill
+                    sizes="(max-width: 768px) 100vw, 320px"
+                    className="object-cover"
+                  />
+                </div>
               </div>
             )}
             <div className={c.avatarUrl ? "md:col-span-2" : ""}>
@@ -282,8 +287,9 @@ export default async function HomePage() {
                     )}
                   </div>
                   {m.img && (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img src={m.img} alt="" className="w-full sm:w-28 h-40 sm:h-20 object-cover rounded flex-shrink-0" />
+                    <div className="relative w-full sm:w-28 h-40 sm:h-20 rounded overflow-hidden flex-shrink-0">
+                      <Image src={m.img} alt="" fill sizes="(max-width: 640px) 100vw, 112px" className="object-cover" />
+                    </div>
                   )}
                 </div>
               ))}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import ThemeToggle from "./ThemeToggle";
 
 const LINKS = ["about", "expertise", "projects", "experience", "education", "milestones", "contact"];
@@ -39,8 +40,14 @@ export default function Nav({ avatarUrl, textColor }: { avatarUrl: string | null
       <div className="flex items-center justify-between px-6 sm:px-8 py-4">
         <a href="#hero" className="font-display italic text-xl flex items-center" style={{ color: "var(--nav-text)" }}>
           {avatarUrl ? (
-            // eslint-disable-next-line @next/next/no-img-element
-            <img src={avatarUrl} alt="" className="inline-block w-8 h-8 rounded-full object-cover mr-2.5 align-middle" style={{ border: "1px solid rgba(255,255,255,0.25)" }} />
+            <Image
+              src={avatarUrl}
+              alt=""
+              width={32}
+              height={32}
+              className="inline-block w-8 h-8 rounded-full object-cover mr-2.5 align-middle"
+              style={{ border: "1px solid rgba(255,255,255,0.25)" }}
+            />
           ) : null}
           PRK
         </a>
